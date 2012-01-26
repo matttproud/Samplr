@@ -12,7 +12,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/hamcrest-all-1.2.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/guiceberry-3.1.0-src.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/guiceberry-3.1.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/guiceberry-3.1.0.jar" sourcepath="war/WEB-INF/lib/guiceberry-3.1.0-src.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
