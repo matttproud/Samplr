@@ -13,6 +13,10 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/hamcrest-all-1.2.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/guiceberry-3.1.0.jar" sourcepath="war/WEB-INF/lib/guiceberry-3.1.0-src.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/guice-3.0.zip" sourcepath="war/WEB-INF/lib/guice-3.0-src.zip"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/guice-3.0/guice-3.0.jar" sourcepath="war/WEB-INF/lib/guice-3.0-src"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/guice-3.0/guice-assistedinject-3.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/guice-3.0/javax.inject.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/guice-3.0/aopalliance.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/guice-3.0/guice-servlet-3.0.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

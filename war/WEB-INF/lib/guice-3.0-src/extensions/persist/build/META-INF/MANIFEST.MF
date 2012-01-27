@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Export-Package: com.google.inject.persist.finder;version="1.3",com.goo
+ gle.inject.persist.jpa;version="1.3",com.google.inject.persist;versio
+ n="1.3"
+Bundle-Name: guice-persist
+Created-By: 1.6.0_23 (Sun Microsystems Inc.)
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,JavaSE-1.6
+Bundle-Copyright: Copyright (C) 2006 Google Inc.
+Bundle-Vendor: Google, Inc.
+Fragment-Host: com.google.inject
+Bundle-Version: 3.0
+Bundle-ManifestVersion: 2
+Bundle-Description: Guice is a lightweight dependency injection framew
+ ork for Java 5 and above
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-DocURL: http://code.google.com/p/google-guice/
+Bundle-SymbolicName: com.google.inject.persist
+Import-Package: javax.inject,javax.persistence,javax.servlet,org.aopal
+ liance.intercept
+
