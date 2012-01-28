@@ -1,4 +1,4 @@
-package org.samplr.client;
+package org.samplr.client.ui;
 
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -15,7 +15,6 @@ public class NewSampleSourceType extends DialogBox {
     
     VerticalPanel verticalPanel = new VerticalPanel();
     setWidget(verticalPanel);
-    verticalPanel.setSize("100%", "100%");
     
     HorizontalPanel titleHorizontalPanel = new HorizontalPanel();
     titleHorizontalPanel.setSpacing(4);
