@@ -31,41 +31,6 @@ public class Ranker {
     this.needle = needle;
   }
 
-  public List<String> oldRank(final String needle, final List<String> candidates) {
-    final int candidatesSize = candidates.size();
-
-    final List<String> emission = new ArrayList<String>(candidatesSize);
-    final Set<String> candidatesList = new HashSet<String>(candidates);
-
-    for (final String candidate : candidatesList) {
-      if (candidate.equals(needle)) {
-        emission.add(candidate);
-      }
-    }
-
-    candidatesList.retainAll(Sets.symmetricDifference(candidatesList, new HashSet<String>(emission)));
-
-    for (final String candidate : candidatesList) {
-      if (candidate.toLowerCase().equals(needle.toLowerCase())) {
-        emission.add(candidate);
-      }
-    }
-
-    candidatesList.retainAll(Sets.symmetricDifference(candidatesList, new HashSet<String>(emission)));
-
-    final Set<String> needleLetterSet = new HashSet(Arrays.asList(needle.split("")));
-
-    for (final String candidate: candidatesList) {
-      final Set<String> candidateLetterSet = new HashSet(Arrays.asList(candidate.split("")));
-
-
-    }
-
-    emission.addAll(candidatesList);
-
-    return emission;
-  }
-
   private String sanitizeString(final String input) {
     return input.trim().replaceAll("\\s+", " ").toLowerCase();
   }
@@ -86,7 +51,7 @@ public class Ranker {
 
     differences.add(sanitizedMatch ? 0 : 1);
 
-    final Predicate nonEmptyPredicate = new Predicate<String>() {
+    final Predicate<String> nonEmptyPredicate = new Predicate<String>() {
       @Override
       public boolean apply(final String candidate) {
         return !Strings.isNullOrEmpty(candidate);
@@ -167,7 +132,7 @@ public class Ranker {
     }
   }
 
-  public List<String> rank(final String unused, final List<String> candidates) {
+  public List<String> rank(final List<String> candidates) {
     final List<Candidate> convertedCandidates = new ArrayList<Candidate>(candidates.size());
 
     for (final String candidate : candidates) {
