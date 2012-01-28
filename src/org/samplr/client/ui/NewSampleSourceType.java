@@ -17,7 +17,7 @@ public class NewSampleSourceType extends DialogBox {
     setWidget(verticalPanel);
     
     HorizontalPanel titleHorizontalPanel = new HorizontalPanel();
-    titleHorizontalPanel.setSpacing(4);
+    titleHorizontalPanel.setSpacing(4);  
     verticalPanel.add(titleHorizontalPanel);
     verticalPanel.setCellVerticalAlignment(titleHorizontalPanel, HasVerticalAlignment.ALIGN_MIDDLE);
     verticalPanel.setCellHorizontalAlignment(titleHorizontalPanel, HasHorizontalAlignment.ALIGN_CENTER);

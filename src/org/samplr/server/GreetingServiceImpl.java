@@ -2,17 +2,21 @@ package org.samplr.server;
 
 import org.samplr.client.GreetingService;
 import org.samplr.shared.FieldVerifier;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.inject.Singleton;
 
 /**
  * The server side implementation of the RPC service.
  */
 @SuppressWarnings("serial")
+@Singleton
 public class GreetingServiceImpl extends RemoteServiceServlet implements
-    GreetingService {
+GreetingService {
 
+  @Override
   public String greetServer(String input) throws IllegalArgumentException {
-    // Verify that the input is valid. 
+    // Verify that the input is valid.
     if (!FieldVerifier.isValidName(input)) {
       // If the input is not valid, throw an IllegalArgumentException back to
       // the client.
@@ -20,7 +24,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
           "Name must be at least 4 characters long");
     }
 
-    String serverInfo = getServletContext().getServerInfo();
+    final String serverInfo = getServletContext().getServerInfo();
     String userAgent = getThreadLocalRequest().getHeader("User-Agent");
 
     // Escape data from the client to avoid cross-site script vulnerabilities.
@@ -38,7 +42,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
    * @param html the html string to escape
    * @return the escaped string
    */
-  private String escapeHtml(String html) {
+  private String escapeHtml(final String html) {
     if (html == null) {
       return null;
     }

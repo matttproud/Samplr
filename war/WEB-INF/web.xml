@@ -6,6 +6,16 @@
          xmlns="http://java.sun.com/xml/ns/javaee">
 
   <!-- Servlets -->
+  <filter>
+    <filter-name>guiceFilter</filter-name>
+    <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>guiceFilter</filter-name>
+    <url-pattern>/test</url-pattern>
+  </filter-mapping>
+  
   <servlet>
     <servlet-name>greetServlet</servlet-name>
     <servlet-class>org.samplr.server.GreetingServiceImpl</servlet-class>
@@ -20,5 +30,9 @@
   <welcome-file-list>
     <welcome-file>Samplr.html</welcome-file>
   </welcome-file-list>
+
+  <listener>
+    <listener-class>org.samplr.server.inject.ServletContextListener</listener-class>
+  </listener>
 
 </web-app>
