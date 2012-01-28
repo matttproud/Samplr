@@ -30,7 +30,7 @@ public class SampleSourceType {
   @Persistent
   private String normalizedTitle;
 
-  @Persistent
+  @Persistent(mappedBy = "sampleSourceType")
   private List<SampleSource> sampleSources;
 
   public SampleSourceType(final String title, final String normalizedTitle) {
@@ -76,7 +76,7 @@ public class SampleSourceType {
 
   @Override
   public boolean equals(final Object other) {
-    if (other != this) {
+    if (other == this) {
       return true;
     }
 

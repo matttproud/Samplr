@@ -18,6 +18,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.samplr.server.model.SampleSource;
 import org.samplr.server.model.SampleSourceType;
 
 import com.google.appengine.api.datastore.Key;
@@ -70,13 +71,11 @@ public class IntegrationTest {
     persistenceManager.makePersistent(sampleSourceType);
     persistenceManager.flush();
     persistenceManager.close();
+    persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
     final Key key = sampleSourceType.getKey();
 
     assertNotNull(key);
-
-    persistenceManager = persistenceManagerFactory.getPersistenceManager();
-
     assertEquals(sampleSourceType, persistenceManager.getObjectById(SampleSourceType.class, key));
 
     sampleSourceType.setTitle("Foo!");
@@ -84,7 +83,6 @@ public class IntegrationTest {
     persistenceManager.makePersistent(sampleSourceType);
     persistenceManager.flush();
     persistenceManager.close();
-
     persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
     final SampleSourceType emitted = persistenceManager.getObjectById(SampleSourceType.class, key);
@@ -95,7 +93,51 @@ public class IntegrationTest {
     persistenceManager.deletePersistent(emitted);
     persistenceManager.flush();
     persistenceManager.close();
+    persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
+    try {
+      assertNull(persistenceManager.getObjectById(SampleSourceType.class, key));
+      fail("This should have failed.");
+    } catch (final JDOObjectNotFoundException e) {
+    }
+  }
+
+  @Test
+  public void testSampleSource_CRUD() {
+    final SampleSourceType sampleSourceType = new SampleSourceType("Politician", "politician");
+    SampleSource sampleSource = new SampleSource("George Bush", "george bush", sampleSourceType);
+
+    assertNull(sampleSource.getKey());
+
+    persistenceManager.makePersistent(sampleSourceType);
+    persistenceManager.makePersistent(sampleSource);
+    persistenceManager.flush();
+    persistenceManager.close();
+    persistenceManager = persistenceManagerFactory.getPersistenceManager();
+
+    final Key key = sampleSource.getKey();
+
+    assertNotNull(key);
+    assertEquals(sampleSource, persistenceManager.getObjectById(SampleSource.class, key));
+
+    sampleSource = persistenceManager.getObjectById(SampleSource.class, key);
+
+    sampleSource.setTitle("Ronald Reagan");
+    sampleSource.setNormalizedTitle("ronald reagan");
+    //persistenceManager.makePersistent(sampleSource);
+    //persistenceManager.flush();
+    //persistenceManager.evictAll();
+    persistenceManager.close();
+    persistenceManager = persistenceManagerFactory.getPersistenceManager();
+
+    final SampleSource emitted = persistenceManager.getObjectById(SampleSource.class, key);
+
+    assertEquals("Ronald Reagan", emitted.getTitle());
+    assertEquals("ronald reagan", emitted.getNormalizedTitle());
+
+    persistenceManager.deletePersistent(emitted);
+    persistenceManager.flush();
+    persistenceManager.close();
     persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
     try {

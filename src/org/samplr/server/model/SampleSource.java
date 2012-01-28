@@ -28,7 +28,7 @@ public class SampleSource {
   @Persistent
   private String normalizedTitle;
 
-  @Persistent(mappedBy = "sampleSources")
+  @Persistent
   private SampleSourceType sampleSourceType;
 
   public SampleSource(final String title, final String normalizedTitle, final SampleSourceType sampleSourceType) {
@@ -82,8 +82,8 @@ public class SampleSource {
 
   @Override
   public boolean equals(final Object other) {
-    if (other != this) {
-      return false;
+    if (other == this) {
+      return true;
     }
 
     if (!(other instanceof SampleSource)) {
