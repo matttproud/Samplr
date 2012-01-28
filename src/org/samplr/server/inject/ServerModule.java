@@ -1,5 +1,8 @@
 package org.samplr.server.inject;
 
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManagerFactory;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.inject.Provides;
@@ -11,5 +14,11 @@ public class ServerModule extends ServletModule {
   @Singleton
   DatastoreService getDatastoreService() {
     return DatastoreServiceFactory.getDatastoreService();
+  }
+
+  @Provides
+  @Singleton
+  PersistenceManagerFactory getPersistenceManagerFactory() {
+    return JDOHelper.getPersistenceManagerFactory("transactions-optional");
   }
 }
