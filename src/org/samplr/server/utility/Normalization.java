@@ -9,7 +9,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class Normalization {
-  public String normalizeTitle(final String title) {
-    return title.toLowerCase();
+  public String normalize(final String content) {
+    return content.toLowerCase();
   }
 }
