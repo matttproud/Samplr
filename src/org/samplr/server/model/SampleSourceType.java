@@ -9,6 +9,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 /**
@@ -27,7 +28,7 @@ public class SampleSourceType {
   @Persistent
   private String normalizedTitle;
 
-  SampleSourceType(final String title, final String normalizedTitle) {
+  public SampleSourceType(final String title, final String normalizedTitle) {
     Preconditions.checkNotNull(title, "title may not be null.");
     Preconditions.checkNotNull(normalizedTitle, "normalizedTitle may not be null.");
 
@@ -53,5 +54,29 @@ public class SampleSourceType {
 
   public String getNormalizedTitle() {
     return normalizedTitle;
+  }
+
+  public Key getKey() {
+    return key;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(key, title, normalizedTitle);
+  }
+
+  @Override
+  public boolean equals(final Object other) {
+    if (other != this) {
+      return true;
+    }
+
+    if (!(other instanceof SampleSourceType)) {
+      return false;
+    }
+
+    final SampleSourceType casted = (SampleSourceType)other;
+
+    return (Objects.equal(key, casted.getKey()) && Objects.equal(title, casted.getTitle()) && Objects.equal(normalizedTitle, casted.getNormalizedTitle()));
   }
 }
