@@ -2,6 +2,7 @@ package org.samplr.server.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.junit.Before;
@@ -80,4 +81,8 @@ public class SampleSourceTypeTest {
     assertEquals("title", sampleSourceType.getNormalizedTitle());
   }
 
+  @Test
+  public void testGetSampleSources() {
+    assertNull(sampleSourceType.getSampleSources());
+  }
 }

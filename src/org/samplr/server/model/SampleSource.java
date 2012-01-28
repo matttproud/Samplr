@@ -3,8 +3,6 @@
  */
 package org.samplr.server.model;
 
-import java.util.List;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -19,7 +17,7 @@ import com.google.common.base.Preconditions;
  *
  */
 @PersistenceCapable
-public class SampleSourceType {
+public class SampleSource {
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
   private Key key;
@@ -30,15 +28,17 @@ public class SampleSourceType {
   @Persistent
   private String normalizedTitle;
 
-  @Persistent
-  private List<SampleSource> sampleSources;
+  @Persistent(mappedBy = "sampleSources")
+  private SampleSourceType sampleSourceType;
 
-  public SampleSourceType(final String title, final String normalizedTitle) {
+  public SampleSource(final String title, final String normalizedTitle, final SampleSourceType sampleSourceType) {
     Preconditions.checkNotNull(title, "title may not be null.");
     Preconditions.checkNotNull(normalizedTitle, "normalizedTitle may not be null.");
+    Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
 
     this.title = title;
     this.normalizedTitle = normalizedTitle;
+    this.sampleSourceType = sampleSourceType;
   }
 
   public void setTitle(final String title) {
@@ -47,45 +47,51 @@ public class SampleSourceType {
     this.title = title;
   }
 
+  public String getTitle() {
+    return title;
+  }
+
   public void setNormalizedTitle(final String normalizedTitle) {
     Preconditions.checkNotNull(normalizedTitle, "normalizedTitle may not be null.");
 
     this.normalizedTitle = normalizedTitle;
   }
 
-  public String getTitle() {
-    return title;
-  }
-
   public String getNormalizedTitle() {
     return normalizedTitle;
+  }
+
+  public void setSampleSourceType(final SampleSourceType sampleSourceType) {
+    Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
+
+    this.sampleSourceType = sampleSourceType;
+  }
+
+  public SampleSourceType getSampleSourceType() {
+    return sampleSourceType;
   }
 
   public Key getKey() {
     return key;
   }
 
-  public List<SampleSource> getSampleSources() {
-    return sampleSources;
-  }
-
   @Override
   public int hashCode() {
-    return Objects.hashCode(key, title, normalizedTitle);
+    return Objects.hashCode(key, title, normalizedTitle, sampleSourceType);
   }
 
   @Override
   public boolean equals(final Object other) {
     if (other != this) {
-      return true;
-    }
-
-    if (!(other instanceof SampleSourceType)) {
       return false;
     }
 
-    final SampleSourceType casted = (SampleSourceType)other;
+    if (!(other instanceof SampleSource)) {
+      return false;
+    }
 
-    return (Objects.equal(key, casted.getKey()) && Objects.equal(title, casted.getTitle()) && Objects.equal(normalizedTitle, casted.getNormalizedTitle()));
+    final SampleSource casted = (SampleSource)other;
+
+    return (Objects.equal(key, casted.getKey()) && Objects.equal(title, casted.getTitle()) && Objects.equal(normalizedTitle, casted.getNormalizedTitle()) && Objects.equal(sampleSourceType, casted.getSampleSourceType()));
   }
 }

@@ -28,7 +28,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
  * @author mtp
  *
  */
-public class Integration {
+public class IntegrationTest {
   private static PersistenceManagerFactory persistenceManagerFactory;
 
   private final LocalServiceTestHelper localServiceTestHelper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
