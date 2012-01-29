@@ -29,16 +29,16 @@ public class SampleSource {
   private String normalizedTitle;
 
   @Persistent
-  private SampleSourceType sampleSourceType;
+  private Key sampleSourceTypeKey;
 
-  public SampleSource(final String title, final String normalizedTitle, final SampleSourceType sampleSourceType) {
+  public SampleSource(final String title, final String normalizedTitle, final Key sampleSourceType) {
     Preconditions.checkNotNull(title, "title may not be null.");
     Preconditions.checkNotNull(normalizedTitle, "normalizedTitle may not be null.");
     Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
 
     this.title = title;
     this.normalizedTitle = normalizedTitle;
-    this.sampleSourceType = sampleSourceType;
+    this.sampleSourceTypeKey = sampleSourceType;
   }
 
   public void setTitle(final String title) {
@@ -61,14 +61,14 @@ public class SampleSource {
     return normalizedTitle;
   }
 
-  public void setSampleSourceType(final SampleSourceType sampleSourceType) {
+  public void setSampleSourceType(final Key sampleSourceType) {
     Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
 
-    this.sampleSourceType = sampleSourceType;
+    this.sampleSourceTypeKey = sampleSourceType;
   }
 
-  public SampleSourceType getSampleSourceType() {
-    return sampleSourceType;
+  public Key getSampleSourceTypeKey() {
+    return sampleSourceTypeKey;
   }
 
   public Key getKey() {
@@ -77,7 +77,7 @@ public class SampleSource {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(key, title, normalizedTitle, sampleSourceType);
+    return Objects.hashCode(key, title, normalizedTitle, sampleSourceTypeKey);
   }
 
   @Override
@@ -92,6 +92,6 @@ public class SampleSource {
 
     final SampleSource casted = (SampleSource)other;
 
-    return (Objects.equal(key, casted.getKey()) && Objects.equal(title, casted.getTitle()) && Objects.equal(normalizedTitle, casted.getNormalizedTitle()) && Objects.equal(sampleSourceType, casted.getSampleSourceType()));
+    return (Objects.equal(key, casted.getKey()) && Objects.equal(title, casted.getTitle()) && Objects.equal(normalizedTitle, casted.getNormalizedTitle()) && Objects.equal(sampleSourceTypeKey, casted.getSampleSourceTypeKey()));
   }
 }

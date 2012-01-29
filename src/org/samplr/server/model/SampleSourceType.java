@@ -13,6 +13,8 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 /**
  * @author mtp
@@ -30,8 +32,8 @@ public class SampleSourceType {
   @Persistent
   private String normalizedTitle;
 
-  @Persistent(mappedBy = "sampleSourceType")
-  private List<SampleSource> sampleSources;
+  @Persistent
+  private List<Key> sampleSourceKeys = Lists.newArrayList();
 
   public SampleSourceType(final String title, final String normalizedTitle) {
     Preconditions.checkNotNull(title, "title may not be null.");
@@ -65,8 +67,20 @@ public class SampleSourceType {
     return key;
   }
 
-  public List<SampleSource> getSampleSources() {
-    return sampleSources;
+  public ImmutableList<Key> getSampleSourceKeys() {
+    return ImmutableList.copyOf(sampleSourceKeys);
+  }
+
+  public void addSampleSource(final SampleSource sampleSource) {
+    Preconditions.checkNotNull(sampleSource, "sampleSource may not be null.");
+
+    sampleSourceKeys.add(sampleSource.getKey());
+  }
+
+  public void removeSampleSource(final SampleSource sampleSource) {
+    Preconditions.checkNotNull(sampleSource, "sampleSource may not be null.");
+
+    sampleSourceKeys.add(sampleSource.getKey());
   }
 
   @Override

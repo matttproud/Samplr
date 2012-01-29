@@ -236,52 +236,7 @@ public class IntegrationTest {
   }
 
   @Test
-  public void testSampleSource_Create_NewSampleSourceType() {
-    final SampleSourceType sampleSourceType = new SampleSourceType("Activist", "activist");
-    final SampleSource sampleSource = new SampleSource("Noam Chomsky", "noam chomsky", sampleSourceType);
-
-    assertNull(sampleSourceType.getKey());
-    assertNull(sampleSource.getKey());
-
-    persistenceManager.makePersistent(sampleSourceType);
-    persistenceManager.makePersistent(sampleSource);
-    persistenceManager.close();
-    persistenceManager = persistenceManagerFactory.getPersistenceManager();
-
-    final Key sampleSourceKey = sampleSource.getKey();
-    final Key sampleSourceTypeKey = sampleSourceType.getKey();
-
-    assertNotNull(sampleSourceKey);
-    assertNotNull(sampleSourceTypeKey);
-
-    final SampleSourceType returnedSampleSourceType = persistenceManager.getObjectById(SampleSourceType.class, sampleSourceTypeKey);
-    final SampleSource returnedSampleSource = persistenceManager.getObjectById(SampleSource.class, sampleSourceKey);
-
-    assertEquals(sampleSourceType, returnedSampleSourceType);
-    assertEquals(sampleSource, returnedSampleSource);
-
-    assertEquals(sampleSourceType, returnedSampleSource.getSampleSourceType());
-
-    assertEquals(1, returnedSampleSourceType.getSampleSources().size());
-    assertEquals(sampleSource, returnedSampleSourceType.getSampleSources().get(0));
-
-    final Query bySampleSourceType = persistenceManager.newQuery(SampleSource.class);
-    bySampleSourceType.setFilter("sampleSourceType == sst");
-    bySampleSourceType.declareParameters(sampleSourceType.getClass().getName() + " sst");
-
-    final List<SampleSource> emissionsBySampleSourceType = (List<SampleSource>) bySampleSourceType.execute(sampleSourceType);
-    assertEquals(1, emissionsBySampleSourceType.size());
-
-    final SampleSource extractedSampleSource = emissionsBySampleSourceType.get(0);
-    assertEquals(sampleSource, extractedSampleSource);
-    assertEquals(returnedSampleSource, extractedSampleSource);
-
-    // TODO: Back-query SampleSource for SampleSourceType
-  }
-
-  @Ignore
-  @Test
-  public void testSampleSource_Create_ExistingSampleSourceType() {
+  public void testSampleSource_Create() {
     final SampleSourceType sampleSourceType = new SampleSourceType("Activist", "activist");
     assertNull(sampleSourceType.getKey());
 
@@ -290,9 +245,10 @@ public class IntegrationTest {
     persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
     final Key sampleSourceTypeKey = sampleSourceType.getKey();
+
     assertNotNull(sampleSourceTypeKey);
 
-    final SampleSource sampleSource = new SampleSource("Noam Chomsky", "noam chomsky", sampleSourceType);
+    final SampleSource sampleSource = new SampleSource("Noam Chomsky", "noam chomsky", sampleSourceTypeKey);
     assertNull(sampleSource.getKey());
 
     persistenceManager.makePersistent(sampleSource);
@@ -300,8 +256,8 @@ public class IntegrationTest {
     persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
     final Key sampleSourceKey = sampleSource.getKey();
-    assertNotNull(sampleSourceKey);
 
+    assertNotNull(sampleSourceKey);
 
     final SampleSourceType returnedSampleSourceType = persistenceManager.getObjectById(SampleSourceType.class, sampleSourceTypeKey);
     final SampleSource returnedSampleSource = persistenceManager.getObjectById(SampleSource.class, sampleSourceKey);
@@ -309,22 +265,26 @@ public class IntegrationTest {
     assertEquals(sampleSourceType, returnedSampleSourceType);
     assertEquals(sampleSource, returnedSampleSource);
 
-    assertEquals(sampleSourceType, returnedSampleSource.getSampleSourceType());
+    assertEquals(sampleSourceType.getKey(), returnedSampleSource.getSampleSourceTypeKey());
 
-    assertEquals(1, returnedSampleSourceType.getSampleSources().size());
-    assertEquals(sampleSource, returnedSampleSourceType.getSampleSources().get(0));
+    returnedSampleSourceType.addSampleSource(returnedSampleSource);
+    persistenceManager.close();
+    persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
-    final Query bySampleSourceType = persistenceManager.newQuery(SampleSource.class);
-    bySampleSourceType.setFilter("sampleSourceType == sst");
-    bySampleSourceType.declareParameters(sampleSourceType.getClass().getName() + " sst");
+    final SampleSourceType mutatedSampleSourceType = persistenceManager.getObjectById(SampleSourceType.class, sampleSourceType.getKey());
 
-    final List<SampleSource> emissionsBySampleSourceType = (List<SampleSource>) bySampleSourceType.execute(sampleSourceType);
+    assertEquals(1, mutatedSampleSourceType.getSampleSourceKeys().size());
+    assertEquals(sampleSourceKey, mutatedSampleSourceType.getSampleSourceKeys().get(0));
+
+    final Query bySampleSourceTypeKey = persistenceManager.newQuery(SampleSource.class);
+    bySampleSourceTypeKey.setFilter("sampleSourceTypeKey == key");
+    bySampleSourceTypeKey.declareParameters(sampleSourceTypeKey.getClass().getName() + " key");
+
+    final List<SampleSource> emissionsBySampleSourceType = (List<SampleSource>) bySampleSourceTypeKey.execute(sampleSourceTypeKey);
     assertEquals(1, emissionsBySampleSourceType.size());
 
     final SampleSource extractedSampleSource = emissionsBySampleSourceType.get(0);
     assertEquals(sampleSource, extractedSampleSource);
     assertEquals(returnedSampleSource, extractedSampleSource);
-
-    // TODO: Back-query SampleSource for SampleSourceType
   }
 }
