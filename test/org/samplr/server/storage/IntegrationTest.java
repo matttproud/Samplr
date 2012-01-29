@@ -55,54 +55,92 @@ public class IntegrationTest {
 
   @After
   public void tearDown() {
-    localServiceTestHelper.tearDown();
+    if (!((persistenceManager == null) || persistenceManager.isClosed())) {
+      persistenceManager.close();
+    }
 
-    persistenceManager.flush();
-    persistenceManager.evictAll();
-    persistenceManager.close();
+    localServiceTestHelper.tearDown();
   }
 
   @Test
-  public void testSampleSourceType_CRUD() {
-    final SampleSourceType sampleSourceType = new SampleSourceType("Title", "title");
+  public void testSampleSourceType_Create() {
+    final SampleSourceType sampleSourceType = new SampleSourceType("Politician", "politician");
 
     assertNull(sampleSourceType.getKey());
 
     persistenceManager.makePersistent(sampleSourceType);
-    persistenceManager.flush();
-    persistenceManager.close();
-    persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
     final Key key = sampleSourceType.getKey();
-
     assertNotNull(key);
-    assertEquals(sampleSourceType, persistenceManager.getObjectById(SampleSourceType.class, key));
 
-    sampleSourceType.setTitle("Foo!");
-    sampleSourceType.setNormalizedTitle("foo");
-    persistenceManager.makePersistent(sampleSourceType);
-    persistenceManager.flush();
     persistenceManager.close();
     persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
-    final SampleSourceType emitted = persistenceManager.getObjectById(SampleSourceType.class, key);
+    final SampleSourceType returned = persistenceManager.getObjectById(SampleSourceType.class, key);
+    assertNotNull(returned);
+    assertEquals(sampleSourceType, returned);
+  }
 
-    assertEquals("Foo!", emitted.getTitle());
-    assertEquals("foo", emitted.getNormalizedTitle());
+  @Test
+  public void testSampleSourceType_Update() {
+    final SampleSourceType original = new SampleSourceType("Talking Head", "talking head");
 
-    persistenceManager.deletePersistent(emitted);
-    persistenceManager.flush();
+    assertNull(original.getKey());
+
+    persistenceManager.makePersistent(original);
+
+    final Key key = original.getKey();
+    assertNotNull(key);
+
+    persistenceManager.close();
+    persistenceManager = persistenceManagerFactory.getPersistenceManager();
+
+    final SampleSourceType returned = persistenceManager.getObjectById(SampleSourceType.class, key);
+    assertNotNull(returned);
+    assertEquals(original, returned);
+
+    returned.setTitle("Apologist");
+    returned.setNormalizedTitle("apologist");
+
+    persistenceManager.close();
+    persistenceManager = persistenceManagerFactory.getPersistenceManager();
+
+    final SampleSourceType mutated = persistenceManager.getObjectById(SampleSourceType.class, key);
+    assertNotNull(mutated);
+    assertEquals("Apologist", mutated.getTitle());
+    assertEquals("apologist", mutated.getNormalizedTitle());
+  }
+
+  @Test
+  public void testSampleSourceType_Delete() {
+    final SampleSourceType sampleSourceType = new SampleSourceType("Legitimator", "legitimator");
+
+    assertNull(sampleSourceType.getKey());
+
+    persistenceManager.makePersistent(sampleSourceType);
+
+    final Key key = sampleSourceType.getKey();
+    assertNotNull(key);
+
+    persistenceManager.close();
+    persistenceManager = persistenceManagerFactory.getPersistenceManager();
+
+    final SampleSourceType returned = persistenceManager.getObjectById(SampleSourceType.class, key);
+    assertNotNull(returned);
+    assertEquals(sampleSourceType, returned);
+
+    persistenceManager.deletePersistent(returned);
     persistenceManager.close();
     persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
     try {
-      assertNull(persistenceManager.getObjectById(SampleSourceType.class, key));
-      fail("This should have failed.");
+      persistenceManager.getObjectById(SampleSourceType.class, key);
+      fail("This should have raised an error.");
     } catch (final JDOObjectNotFoundException e) {
     }
   }
 
-  @Test
+  // @Test
   public void testSampleSource_CRUD() {
     final SampleSourceType sampleSourceType = new SampleSourceType("Politician", "politician");
     SampleSource sampleSource = new SampleSource("George Bush", "george bush", sampleSourceType);
