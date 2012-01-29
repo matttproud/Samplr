@@ -8,17 +8,19 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
 import javax.jdo.JDOHelper;
 import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.samplr.server.model.SampleSource;
 import org.samplr.server.model.SampleSourceType;
 
 import com.google.appengine.api.datastore.Key;
@@ -140,48 +142,96 @@ public class IntegrationTest {
     }
   }
 
-  // @Test
-  public void testSampleSource_CRUD() {
-    final SampleSourceType sampleSourceType = new SampleSourceType("Politician", "politician");
-    SampleSource sampleSource = new SampleSource("George Bush", "george bush", sampleSourceType);
+  @Test
+  public void testSampleSourceType_Query_ByKey() {
+    final SampleSourceType sampleSourceType = new SampleSourceType("Activist", "activist");
 
-    assertNull(sampleSource.getKey());
+    assertNull(sampleSourceType.getKey());
 
     persistenceManager.makePersistent(sampleSourceType);
-    persistenceManager.makePersistent(sampleSource);
-    persistenceManager.flush();
-    persistenceManager.close();
-    persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
-    final Key key = sampleSource.getKey();
-
+    final Key key = sampleSourceType.getKey();
     assertNotNull(key);
-    assertEquals(sampleSource, persistenceManager.getObjectById(SampleSource.class, key));
 
-    sampleSource = persistenceManager.getObjectById(SampleSource.class, key);
-
-    sampleSource.setTitle("Ronald Reagan");
-    sampleSource.setNormalizedTitle("ronald reagan");
-    //persistenceManager.makePersistent(sampleSource);
-    //persistenceManager.flush();
-    //persistenceManager.evictAll();
     persistenceManager.close();
     persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
-    final SampleSource emitted = persistenceManager.getObjectById(SampleSource.class, key);
+    final SampleSourceType returned = persistenceManager.getObjectById(SampleSourceType.class, key);
+    assertNotNull(returned);
+    assertEquals(sampleSourceType, returned);
 
-    assertEquals("Ronald Reagan", emitted.getTitle());
-    assertEquals("ronald reagan", emitted.getNormalizedTitle());
+    final Query byKey = persistenceManager.newQuery(SampleSourceType.class);
+    byKey.setFilter("key == k");
+    byKey.declareParameters(key.getClass().getName() + " k");
 
-    persistenceManager.deletePersistent(emitted);
-    persistenceManager.flush();
+    final List<SampleSourceType> emissions = (List<SampleSourceType>) byKey.execute(key);
+    assertEquals(1, emissions.size());
+
+    final SampleSourceType extracted = emissions.get(0);
+
+    assertEquals(sampleSourceType, extracted);
+    assertEquals(returned, extracted);
+  }
+
+  @Test
+  public void testSampleSourceType_Query_ByTitle() {
+    final SampleSourceType sampleSourceType = new SampleSourceType("Activist", "activist");
+
+    assertNull(sampleSourceType.getKey());
+
+    persistenceManager.makePersistent(sampleSourceType);
+
+    final Key key = sampleSourceType.getKey();
+    assertNotNull(key);
+
     persistenceManager.close();
     persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
-    try {
-      assertNull(persistenceManager.getObjectById(SampleSourceType.class, key));
-      fail("This should have failed.");
-    } catch (final JDOObjectNotFoundException e) {
-    }
+    final SampleSourceType returned = persistenceManager.getObjectById(SampleSourceType.class, key);
+    assertNotNull(returned);
+    assertEquals(sampleSourceType, returned);
+
+    final Query byKey = persistenceManager.newQuery(SampleSourceType.class);
+    byKey.setFilter("title == t");
+    byKey.declareParameters("String t");
+
+    final List<SampleSourceType> emissions = (List<SampleSourceType>) byKey.execute("Activist");
+    assertEquals(1, emissions.size());
+
+    final SampleSourceType extracted = emissions.get(0);
+
+    assertEquals(sampleSourceType, extracted);
+    assertEquals(returned, extracted);
+  }
+
+  @Test
+  public void testSampleSourceType_Query_ByNormalizedTitle() {
+    final SampleSourceType sampleSourceType = new SampleSourceType("Activist", "activist");
+
+    assertNull(sampleSourceType.getKey());
+
+    persistenceManager.makePersistent(sampleSourceType);
+
+    final Key key = sampleSourceType.getKey();
+    assertNotNull(key);
+
+    persistenceManager.close();
+    persistenceManager = persistenceManagerFactory.getPersistenceManager();
+
+    final SampleSourceType returned = persistenceManager.getObjectById(SampleSourceType.class, key);
+    assertNotNull(returned);
+    assertEquals(sampleSourceType, returned);
+
+    final Query byKey = persistenceManager.newQuery(SampleSourceType.class);
+    byKey.setFilter("normalizedTitle == t");
+    byKey.declareParameters("String t");
+
+    final List<SampleSourceType> emissions = (List<SampleSourceType>) byKey.execute("activist");
+    assertEquals(1, emissions.size());
+
+    final SampleSourceType extracted = emissions.get(0);
+
+    assertEquals(sampleSourceType, extracted);
+    assertEquals(returned, extracted);
   }
 }
