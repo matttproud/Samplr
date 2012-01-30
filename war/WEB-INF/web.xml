@@ -17,13 +17,13 @@
   </filter-mapping>
   
   <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>org.samplr.server.GreetingServiceImpl</servlet-class>
+    <servlet-name>samplrServlet</servlet-name>
+    <servlet-class>org.samplr.server.SamplrServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/samplr/greet</url-pattern>
+    <servlet-name>samplrServlet</servlet-name>
+    <url-pattern>/samplr/service</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->
