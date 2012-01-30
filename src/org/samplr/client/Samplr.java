@@ -1,10 +1,17 @@
 package org.samplr.client;
 
+import java.util.List;
+
+import org.samplr.shared.model.SampleSourceType;
+
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -31,6 +38,23 @@ public class Samplr implements EntryPoint {
 
     final CellList<String> sampleSourceTypeCellList = new CellList<String>(new TextCell());
     sampleSourceTypePanel.add(sampleSourceTypeCellList);
+    samplrService.getSampleSourceTypes(new AsyncCallback<List<SampleSourceType>>() {
+
+      @Override
+      public void onSuccess(final List<SampleSourceType> result) {
+        final ImmutableList.Builder<String> emissionBuilder = ImmutableList.builder();
+        for (final SampleSourceType i: result) {
+          emissionBuilder.add(i.getTitle());
+        }
+
+        sampleSourceTypeCellList.setRowData(emissionBuilder.build());
+      }
+
+      @Override
+      public void onFailure(final Throwable caught) {
+        Window.alert(caught.toString());
+      }
+    });
 
     final VerticalPanel sampleSourcePanel = new VerticalPanel();
     tabLayoutPanel.add(sampleSourcePanel, "SampleSource");
