@@ -1,5 +1,9 @@
 package org.samplr.client;
 
+import java.util.List;
+
+import org.samplr.shared.model.SampleSourceType;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -8,4 +12,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("service")
 public interface SamplrService extends RemoteService {
+  public List<SampleSourceType> getSampleSourceTypes();
 }

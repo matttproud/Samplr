@@ -30,8 +30,8 @@ public class Samplr implements EntryPoint {
     tabLayoutPanel.add(sampleSourceTypePanel, "SampleSourceType");
 
     final CellList<String> sampleSourceTypeCellList = new CellList<String>(new TextCell());
-
     sampleSourceTypePanel.add(sampleSourceTypeCellList);
+
     final VerticalPanel sampleSourcePanel = new VerticalPanel();
     tabLayoutPanel.add(sampleSourcePanel, "SampleSource");
     RootPanel.get("widgetContainer").add(tabLayoutPanel);
