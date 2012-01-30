@@ -21,8 +21,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.samplr.server.model.SampleSource;
-import org.samplr.server.model.SampleSourceType;
+import org.samplr.shared.model.SampleSource;
+import org.samplr.shared.model.SampleSourceType;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;

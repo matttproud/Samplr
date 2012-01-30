@@ -1,4 +1,4 @@
-package org.samplr.server.model;
+package org.samplr.shared.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.samplr.shared.model.SampleSourceType;
 
 public class SampleSourceTypeTest {
   private SampleSourceType sampleSourceType;

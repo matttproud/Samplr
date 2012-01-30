@@ -1,7 +1,13 @@
 package org.samplr.client;
 
+import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -19,5 +25,15 @@ public class Samplr implements EntryPoint {
 
   @Override
   public void onModuleLoad() {
+    final TabLayoutPanel tabLayoutPanel = new TabLayoutPanel(1.5, Unit.EM);
+    final VerticalPanel sampleSourceTypePanel = new VerticalPanel();
+    tabLayoutPanel.add(sampleSourceTypePanel, "SampleSourceType");
+
+    final CellList<String> sampleSourceTypeCellList = new CellList<String>(new TextCell());
+
+    sampleSourceTypePanel.add(sampleSourceTypeCellList);
+    final VerticalPanel sampleSourcePanel = new VerticalPanel();
+    tabLayoutPanel.add(sampleSourcePanel, "SampleSource");
+    RootPanel.get("widgetContainer").add(tabLayoutPanel);
   }
 }

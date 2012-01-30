@@ -1,4 +1,4 @@
-package org.samplr.server.model;
+package org.samplr.shared.model;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
