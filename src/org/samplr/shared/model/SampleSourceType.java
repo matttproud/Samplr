@@ -6,11 +6,13 @@ package org.samplr.shared.model;
 import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import com.google.appengine.api.datastore.Key;
+import org.datanucleus.jpa.annotations.Extension;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -20,11 +22,12 @@ import com.google.common.collect.Lists;
  * @author mtp
  *
  */
-@PersistenceCapable
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class SampleSourceType {
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-  private Key key;
+  @Extension(vendorName = "datanucleus", key = "gae.encoded-pk", value = "true")
+  private String key;
 
   @Persistent
   private String title;
@@ -33,7 +36,7 @@ public class SampleSourceType {
   private String normalizedTitle;
 
   @Persistent
-  private List<Key> sampleSourceKeys = Lists.newArrayList();
+  private List<String> sampleSourceKeys = Lists.newArrayList();
 
   public SampleSourceType(final String title, final String normalizedTitle) {
     Preconditions.checkNotNull(title, "title may not be null.");
@@ -63,11 +66,11 @@ public class SampleSourceType {
     return normalizedTitle;
   }
 
-  public Key getKey() {
+  public String getKey() {
     return key;
   }
 
-  public ImmutableList<Key> getSampleSourceKeys() {
+  public List<String> getSampleSourceKeys() {
     return ImmutableList.copyOf(sampleSourceKeys);
   }
 

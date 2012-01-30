@@ -4,11 +4,13 @@
 package org.samplr.shared.model;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import com.google.appengine.api.datastore.Key;
+import org.datanucleus.jpa.annotations.Extension;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
@@ -16,11 +18,12 @@ import com.google.common.base.Preconditions;
  * @author mtp
  *
  */
-@PersistenceCapable
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class SampleSource {
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-  private Key key;
+  @Extension(vendorName = "datanucleus", key = "gae.encoded-pk", value = "true")
+  private String key;
 
   @Persistent
   private String title;
@@ -29,16 +32,16 @@ public class SampleSource {
   private String normalizedTitle;
 
   @Persistent
-  private Key sampleSourceTypeKey;
+  private String sampleSourceTypeKey;
 
-  public SampleSource(final String title, final String normalizedTitle, final Key sampleSourceType) {
+  public SampleSource(final String title, final String normalizedTitle, final SampleSourceType sampleSourceType) {
     Preconditions.checkNotNull(title, "title may not be null.");
     Preconditions.checkNotNull(normalizedTitle, "normalizedTitle may not be null.");
     Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
 
     this.title = title;
     this.normalizedTitle = normalizedTitle;
-    this.sampleSourceTypeKey = sampleSourceType;
+    this.sampleSourceTypeKey = sampleSourceType.getKey();
   }
 
   public void setTitle(final String title) {
@@ -61,17 +64,17 @@ public class SampleSource {
     return normalizedTitle;
   }
 
-  public void setSampleSourceType(final Key sampleSourceType) {
+  public void setSampleSourceType(final SampleSourceType sampleSourceType) {
     Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
 
-    this.sampleSourceTypeKey = sampleSourceType;
+    this.sampleSourceTypeKey = sampleSourceType.getKey();
   }
 
-  public Key getSampleSourceTypeKey() {
+  public String getSampleSourceTypeKey() {
     return sampleSourceTypeKey;
   }
 
-  public Key getKey() {
+  public String getKey() {
     return key;
   }
 

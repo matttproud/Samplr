@@ -12,6 +12,7 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/hamcrest-all-1.2.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/guiceberry-3.1.0.jar" sourcepath="war/WEB-INF/lib/guiceberry-3.1.0-src.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/guava-gwt-11.0.1.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/guava-11.0.1.jar" sourcepath="war/WEB-INF/lib/guava-11.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/aopalliance.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/guice-3.0.jar"/>
