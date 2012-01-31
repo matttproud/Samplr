@@ -20,6 +20,7 @@
   <source path='client'/>
   <source path='shared'/>
   
+  <super-source path='thirdparty'/>
   <inherits name='com.google.common.base.Base'/>
   <inherits name='com.google.common.collect.Collect' />
 </module>

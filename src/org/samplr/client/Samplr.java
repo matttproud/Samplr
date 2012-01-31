@@ -1,10 +1,10 @@
 package org.samplr.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.samplr.shared.model.SampleSourceType;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -38,16 +38,34 @@ public class Samplr implements EntryPoint {
 
     final CellList<String> sampleSourceTypeCellList = new CellList<String>(new TextCell());
     sampleSourceTypePanel.add(sampleSourceTypeCellList);
+
+    samplrService.createSampleSourceType(new AsyncCallback<Boolean>() {
+
+      @Override
+      public void onFailure(final Throwable caught) {
+        Window.alert("f " + caught);
+      }
+
+      @Override
+      public void onSuccess(final Boolean result) {
+        // TODO Auto-generated method stub
+
+      }
+    });
     samplrService.getSampleSourceTypes(new AsyncCallback<List<SampleSourceType>>() {
 
       @Override
       public void onSuccess(final List<SampleSourceType> result) {
-        final ImmutableList.Builder<String> emissionBuilder = ImmutableList.builder();
+        final List<String> emissions = new ArrayList<String>(result.size());
+        //        final ImmutableList.Builder<String> b = ImmutableList.builder();
+
         for (final SampleSourceType i: result) {
-          emissionBuilder.add(i.getTitle());
+          emissions.add(i.getTitle());
+          //          b.add(i.getTitle());
         }
 
-        sampleSourceTypeCellList.setRowData(emissionBuilder.build());
+        sampleSourceTypeCellList.setRowData(emissions);
+        //        b.build();
       }
 
       @Override

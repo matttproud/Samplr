@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.samplr.shared.model.SampleSource;
 import org.samplr.shared.model.SampleSourceType;
 
-import com.google.appengine.api.datastore.Key;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
@@ -73,7 +72,7 @@ public class IntegrationTest {
 
     persistenceManager.makePersistent(sampleSourceType);
 
-    final Key key = sampleSourceType.getKey();
+    final String key = sampleSourceType.getKey();
     assertNotNull(key);
 
     persistenceManager.close();
@@ -92,7 +91,7 @@ public class IntegrationTest {
 
     persistenceManager.makePersistent(original);
 
-    final Key key = original.getKey();
+    final String key = original.getKey();
     assertNotNull(key);
 
     persistenceManager.close();
@@ -122,7 +121,7 @@ public class IntegrationTest {
 
     persistenceManager.makePersistent(sampleSourceType);
 
-    final Key key = sampleSourceType.getKey();
+    final String key = sampleSourceType.getKey();
     assertNotNull(key);
 
     persistenceManager.close();
@@ -151,7 +150,7 @@ public class IntegrationTest {
 
     persistenceManager.makePersistent(sampleSourceType);
 
-    final Key key = sampleSourceType.getKey();
+    final String key = sampleSourceType.getKey();
     assertNotNull(key);
 
     persistenceManager.close();
@@ -182,7 +181,7 @@ public class IntegrationTest {
 
     persistenceManager.makePersistent(sampleSourceType);
 
-    final Key key = sampleSourceType.getKey();
+    final String key = sampleSourceType.getKey();
     assertNotNull(key);
 
     persistenceManager.close();
@@ -213,7 +212,7 @@ public class IntegrationTest {
 
     persistenceManager.makePersistent(sampleSourceType);
 
-    final Key key = sampleSourceType.getKey();
+    final String key = sampleSourceType.getKey();
     assertNotNull(key);
 
     persistenceManager.close();
@@ -244,18 +243,18 @@ public class IntegrationTest {
     persistenceManager.close();
     persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
-    final Key sampleSourceTypeKey = sampleSourceType.getKey();
+    final String sampleSourceTypeKey = sampleSourceType.getKey();
 
     assertNotNull(sampleSourceTypeKey);
 
-    final SampleSource sampleSource = new SampleSource("Noam Chomsky", "noam chomsky", sampleSourceTypeKey);
+    final SampleSource sampleSource = new SampleSource("Noam Chomsky", "noam chomsky", sampleSourceType);
     assertNull(sampleSource.getKey());
 
     persistenceManager.makePersistent(sampleSource);
     persistenceManager.close();
     persistenceManager = persistenceManagerFactory.getPersistenceManager();
 
-    final Key sampleSourceKey = sampleSource.getKey();
+    final String sampleSourceKey = sampleSource.getKey();
 
     assertNotNull(sampleSourceKey);
 

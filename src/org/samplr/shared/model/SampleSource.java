@@ -3,13 +3,11 @@
  */
 package org.samplr.shared.model;
 
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-
-import org.datanucleus.jpa.annotations.Extension;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
@@ -18,7 +16,7 @@ import com.google.common.base.Preconditions;
  * @author mtp
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION)
+@PersistenceCapable
 public class SampleSource {
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

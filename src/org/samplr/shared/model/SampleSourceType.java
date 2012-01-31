@@ -3,33 +3,27 @@
  */
 package org.samplr.shared.model;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import org.datanucleus.jpa.annotations.Extension;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 /**
  * @author mtp
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class SampleSourceType implements Serializable {
-  private static final long serialVersionUID = 1L;
-
+@PersistenceCapable
+public class SampleSourceType {
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-  @Extension(vendorName = "datanucleus", key = "gae.encoded-pk", value = "true")
+  @Extension(vendorName = "datanucleus", key = "gae.encoded-pk", value="true")
   private String key;
 
   @Persistent
@@ -39,7 +33,7 @@ public class SampleSourceType implements Serializable {
   private String normalizedTitle;
 
   @Persistent
-  private List<String> sampleSourceKeys = Lists.newArrayList();
+  private List<String> sampleSourceKeys = new ArrayList<String>();
 
   public SampleSourceType(final String title, final String normalizedTitle) {
     Preconditions.checkNotNull(title, "title may not be null.");
@@ -74,7 +68,7 @@ public class SampleSourceType implements Serializable {
   }
 
   public List<String> getSampleSourceKeys() {
-    return ImmutableList.copyOf(sampleSourceKeys);
+    return new ArrayList<String>(sampleSourceKeys);
   }
 
   public void addSampleSource(final SampleSource sampleSource) {
