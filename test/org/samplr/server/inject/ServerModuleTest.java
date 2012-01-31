@@ -5,10 +5,10 @@ package org.samplr.server.inject;
 
 import static org.junit.Assert.assertNotNull;
 
-import javax.jdo.PersistenceManagerFactory;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.samplr.server.storage.DAO;
+import org.samplr.server.storage.ModelRegistry;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.inject.Guice;
@@ -32,21 +32,19 @@ public class ServerModuleTest {
   }
 
   @Test
-  public void testGetDatastoreService() {
+  public void testProvision_DatastoreService() {
     assertNotNull(injector.getInstance(DatastoreService.class));
   }
 
   @Test
-  public void testGetPersistenceManagerFactory() {
-    final PersistenceManagerFactory persistenceManagerFactory = injector.getInstance(PersistenceManagerFactory.class);
-
-    try {
-      assertNotNull(persistenceManagerFactory);
-    } finally {
-      if (persistenceManagerFactory != null) {
-        persistenceManagerFactory.close();
-      }
-    }
+  public void testProvision_ModelRegistry() {
+    assertNotNull(injector.getInstance(ModelRegistry.class));
   }
 
+  @Test
+  public void testProvision_DAO() {
+    final DAO dao = injector.getInstance(DAO.class);
+
+    assertNotNull(dao);
+  }
 }

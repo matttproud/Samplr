@@ -3,37 +3,30 @@
  */
 package org.samplr.shared.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.jdo.annotations.Extension;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
+import javax.persistence.Id;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 /**
  * @author mtp
- *
+ * 
  */
-@PersistenceCapable
 public class SampleSourceType {
-  @PrimaryKey
-  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-  @Extension(vendorName = "datanucleus", key = "gae.encoded-pk", value="true")
-  private String key;
+  @Id
+  private Long key;
 
-  @Persistent
-  private String title;
+  String title;
 
-  @Persistent
-  private String normalizedTitle;
+  String normalizedTitle;
 
-  @Persistent
-  private List<String> sampleSourceKeys = new ArrayList<String>();
+  Set<Long> sampleSourceKeys = new HashSet<Long>();
+
+  private SampleSourceType() {
+  }
 
   public SampleSourceType(final String title, final String normalizedTitle) {
     Preconditions.checkNotNull(title, "title may not be null.");
@@ -63,12 +56,12 @@ public class SampleSourceType {
     return normalizedTitle;
   }
 
-  public String getKey() {
+  public long getKey() {
     return key;
   }
 
-  public List<String> getSampleSourceKeys() {
-    return new ArrayList<String>(sampleSourceKeys);
+  public Set<Long> getSampleSourceKeys() {
+    return new HashSet<Long>(sampleSourceKeys);
   }
 
   public void addSampleSource(final SampleSource sampleSource) {

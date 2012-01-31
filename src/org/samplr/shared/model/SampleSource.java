@@ -3,11 +3,7 @@
  */
 package org.samplr.shared.model;
 
-import javax.jdo.annotations.Extension;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
+import javax.persistence.Id;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
@@ -16,27 +12,20 @@ import com.google.common.base.Preconditions;
  * @author mtp
  *
  */
-@PersistenceCapable
 public class SampleSource {
-  @PrimaryKey
-  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-  @Extension(vendorName = "datanucleus", key = "gae.encoded-pk", value = "true")
-  private String key;
+  @Id
+  private Long key;
 
-  @Persistent
   private String title;
 
-  @Persistent
   private String normalizedTitle;
 
-  @Persistent
-  private String sampleSourceTypeKey;
+  private Long sampleSourceTypeKey;
+
+  private SampleSource() {
+  }
 
   public SampleSource(final String title, final String normalizedTitle, final SampleSourceType sampleSourceType) {
-    Preconditions.checkNotNull(title, "title may not be null.");
-    Preconditions.checkNotNull(normalizedTitle, "normalizedTitle may not be null.");
-    Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
-
     this.title = title;
     this.normalizedTitle = normalizedTitle;
     this.sampleSourceTypeKey = sampleSourceType.getKey();
@@ -68,11 +57,11 @@ public class SampleSource {
     this.sampleSourceTypeKey = sampleSourceType.getKey();
   }
 
-  public String getSampleSourceTypeKey() {
+  public long getSampleSourceTypeKey() {
     return sampleSourceTypeKey;
   }
 
-  public String getKey() {
+  public long getKey() {
     return key;
   }
 
