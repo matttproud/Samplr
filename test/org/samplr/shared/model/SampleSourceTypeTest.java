@@ -6,7 +6,6 @@ import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.samplr.shared.model.SampleSourceType;
 
 public class SampleSourceTypeTest {
   private SampleSourceType sampleSourceType;
@@ -79,10 +78,5 @@ public class SampleSourceTypeTest {
   @Test
   public void testGetNormalizedTitle() {
     assertEquals("title", sampleSourceType.getNormalizedTitle());
-  }
-
-  @Test
-  public void testGetSampleSourcesKeys() {
-    assertNotNull(sampleSourceType.getSampleSourceKeys());
   }
 }

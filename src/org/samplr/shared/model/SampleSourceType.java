@@ -3,9 +3,6 @@
  */
 package org.samplr.shared.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Id;
 
 import com.google.common.base.Objects;
@@ -22,8 +19,6 @@ public class SampleSourceType {
   String title;
 
   String normalizedTitle;
-
-  Set<Long> sampleSourceKeys = new HashSet<Long>();
 
   private SampleSourceType() {
   }
@@ -60,21 +55,6 @@ public class SampleSourceType {
     return key;
   }
 
-  public Set<Long> getSampleSourceKeys() {
-    return new HashSet<Long>(sampleSourceKeys);
-  }
-
-  public void addSampleSource(final SampleSource sampleSource) {
-    Preconditions.checkNotNull(sampleSource, "sampleSource may not be null.");
-
-    sampleSourceKeys.add(sampleSource.getKey());
-  }
-
-  public void removeSampleSource(final SampleSource sampleSource) {
-    Preconditions.checkNotNull(sampleSource, "sampleSource may not be null.");
-
-    sampleSourceKeys.add(sampleSource.getKey());
-  }
 
   @Override
   public int hashCode() {
