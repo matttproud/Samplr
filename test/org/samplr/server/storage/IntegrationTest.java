@@ -9,6 +9,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.samplr.server.utility.Normalization;
 import org.samplr.shared.model.SampleSource;
 import org.samplr.shared.model.SampleSourceType;
 
@@ -27,12 +28,16 @@ import com.googlecode.objectify.Query;
 public class IntegrationTest {
   private final LocalServiceTestHelper localServiceTestHelper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
   private Objectify objectify;
+  private Normalization normalization;
+  private DAO dao;
 
   @Before
   public void setUp() {
     localServiceTestHelper.setUp();
 
     objectify = ObjectifyService.begin();
+    normalization = new Normalization();
+    dao = new DAO();
   }
 
   @After
@@ -339,5 +344,43 @@ public class IntegrationTest {
 
     assertEquals(1, query.count());
     assertEquals(retrievedSS, query.get());
+  }
+
+  @Test
+  public void testSampleSourceTypeFactory_queryByTitle() throws NotFoundException {
+    final SampleSourceType pendingSST = new SampleSourceType("Politician", "politician");
+
+    final Key<SampleSourceType> sstKey = objectify.put(pendingSST);
+
+    assertNotNull(sstKey);
+
+    final SampleSourceType retrievedSST = objectify.get(sstKey);
+
+    assertEquals(pendingSST, retrievedSST);
+
+    final SampleSourceType.Factory factory = new SampleSourceType.Factory(dao, normalization);
+
+    assertEquals(1, factory.queryByTitle(pendingSST.getTitle()).size());
+    assertEquals(pendingSST, factory.queryByTitle(pendingSST.getTitle()).get(0));
+  }
+
+  @Test
+  public void testSampleSourceTypeFactory_from() throws NotFoundException {
+    final SampleSourceType pendingSST = new SampleSourceType("Politician", "politician");
+
+    final Key<SampleSourceType> sstKey = objectify.put(pendingSST);
+
+    assertNotNull(sstKey);
+
+    final SampleSourceType retrievedSST = objectify.get(sstKey);
+
+    assertEquals(pendingSST, retrievedSST);
+
+    final SampleSourceType.Factory factory = new SampleSourceType.Factory(dao, normalization);
+
+    final SampleSourceType mutated = factory.from(retrievedSST).withTitle("Liar").build();
+
+    assertEquals("Liar", mutated.getTitle());
+    assertEquals("liar", mutated.getNormalizedTitle());
   }
 }

@@ -1,17 +1,16 @@
 package org.samplr.server;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Query;
+import java.util.Map;
 
 import org.samplr.client.SamplrService;
+import org.samplr.server.storage.DAO;
 import org.samplr.shared.model.SampleSourceType;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Query;
 
 /**
  * The server side implementation of the RPC service.
@@ -20,34 +19,28 @@ import com.google.inject.Singleton;
 @Singleton
 public class SamplrServiceImpl extends GuiceRemoteServiceServlet implements SamplrService {
   @Inject
-  private PersistenceManagerFactory persistenceManagerFactory;
+  private DAO dao;
 
   @SuppressWarnings("unchecked")
   @Override
   public List<SampleSourceType> getSampleSourceTypes() {
-    final PersistenceManager persistenceManager = persistenceManagerFactory.getPersistenceManager();
-    try {
-      final Query query = persistenceManager.newQuery(SampleSourceType.class);
+    final Query<SampleSourceType> q = dao.ofy().query(SampleSourceType.class);
+    final List<SampleSourceType> l = new ArrayList<SampleSourceType>(q.count());
 
-      return new ArrayList<SampleSourceType>((List<SampleSourceType>)query.execute());
-    } finally {
-      persistenceManager.close();
+    for (final SampleSourceType e : q) {
+      l.add(e);
     }
+
+    return l;
   }
 
   @Override
   public boolean createSampleSourceType() {
-    final PersistenceManager persistenceManager = persistenceManagerFactory.getPersistenceManager();
+    final SampleSourceType a = new SampleSourceType("Politician", "politician");
+    final SampleSourceType b = new SampleSourceType("Crook", "crook");
 
-    try {
-      final SampleSourceType a = new SampleSourceType("Politician", "politician");
-      final SampleSourceType b = new SampleSourceType("Crook", "crook");
+    final Map<Key<SampleSourceType>, SampleSourceType> r = dao.ofy().put(a, b);
 
-      persistenceManager.makePersistentAll(a, b);
-
-      return true;
-    } finally {
-      persistenceManager.close();
-    }
+    return r.size() == 2;
   }
 }

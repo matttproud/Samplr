@@ -43,13 +43,12 @@ public class Samplr implements EntryPoint {
 
       @Override
       public void onFailure(final Throwable caught) {
-        Window.alert("f " + caught);
+        Window.alert("f1 " + caught);
       }
 
       @Override
       public void onSuccess(final Boolean result) {
-        // TODO Auto-generated method stub
-
+        Window.alert("s1 " + result);
       }
     });
     samplrService.getSampleSourceTypes(new AsyncCallback<List<SampleSourceType>>() {
@@ -57,20 +56,21 @@ public class Samplr implements EntryPoint {
       @Override
       public void onSuccess(final List<SampleSourceType> result) {
         final List<String> emissions = new ArrayList<String>(result.size());
-        //        final ImmutableList.Builder<String> b = ImmutableList.builder();
+        // final ImmutableList.Builder<String> b = ImmutableList.builder();
 
         for (final SampleSourceType i: result) {
           emissions.add(i.getTitle());
-          //          b.add(i.getTitle());
+          Window.alert(i.getTitle());
+          // b.add(i.getTitle());
         }
 
         sampleSourceTypeCellList.setRowData(emissions);
-        //        b.build();
+        // b.build();
       }
 
       @Override
       public void onFailure(final Throwable caught) {
-        Window.alert(caught.toString());
+        Window.alert("f2 " + caught.toString());
       }
     });
 
