@@ -5,8 +5,17 @@ package org.samplr.shared.model;
 
 import javax.persistence.Id;
 
+import org.samplr.server.storage.DAO;
+import org.samplr.server.utility.Normalization;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.NotFoundException;
+import com.googlecode.objectify.Query;
 
 /**
  * @author mtp
@@ -14,54 +23,36 @@ import com.google.common.base.Preconditions;
  */
 public class SampleSource {
   @Id
-  private Long key;
+  private String key;
 
   private String title;
 
   private String normalizedTitle;
 
-  private Long sampleSourceTypeKey;
+  private Key<SampleSourceType> sampleSourceTypeKey;
 
-  private SampleSource() {
-  }
+  private SampleSource() {}
 
-  public SampleSource(final String title, final String normalizedTitle, final SampleSourceType sampleSourceType) {
+  SampleSource(final String title, final String normalizedTitle, final String key, final Key<SampleSourceType> sampleSourceTypeKey) {
     this.title = title;
     this.normalizedTitle = normalizedTitle;
-    this.sampleSourceTypeKey = sampleSourceType.getKey();
-  }
-
-  public void setTitle(final String title) {
-    Preconditions.checkNotNull(title, "title may not be null.");
-
-    this.title = title;
+    this.key = key;
+    this.sampleSourceTypeKey = sampleSourceTypeKey;
   }
 
   public String getTitle() {
     return title;
   }
 
-  public void setNormalizedTitle(final String normalizedTitle) {
-    Preconditions.checkNotNull(normalizedTitle, "normalizedTitle may not be null.");
-
-    this.normalizedTitle = normalizedTitle;
-  }
-
   public String getNormalizedTitle() {
     return normalizedTitle;
   }
 
-  public void setSampleSourceType(final SampleSourceType sampleSourceType) {
-    Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
-
-    this.sampleSourceTypeKey = sampleSourceType.getKey();
-  }
-
-  public long getSampleSourceTypeKey() {
+  public Key<SampleSourceType> getSampleSourceTypeKey() {
     return sampleSourceTypeKey;
   }
 
-  public long getKey() {
+  public String getKey() {
     return key;
   }
 
@@ -83,5 +74,128 @@ public class SampleSource {
     final SampleSource casted = (SampleSource)other;
 
     return (Objects.equal(key, casted.getKey()) && Objects.equal(title, casted.getTitle()) && Objects.equal(normalizedTitle, casted.getNormalizedTitle()) && Objects.equal(sampleSourceTypeKey, casted.getSampleSourceTypeKey()));
+  }
+
+  @Singleton
+  public static class StorageManager {
+    private final DAO dao;
+    private final Normalization normalization;
+
+    @Inject
+    public StorageManager(final DAO dao, final Normalization normalization) {
+      Preconditions.checkNotNull(dao, "dao may not be null.");
+      Preconditions.checkNotNull(normalization, "normalization may not be null.");
+
+      this.dao = dao;
+      this.normalization = normalization;
+    }
+
+    public SampleSource getByKey(final String key) throws NotFoundException {
+      Preconditions.checkNotNull(key, "key may not be null.");
+      final Key<SampleSource> entityKey = new Key<SampleSource>(SampleSource.class, key);
+
+      return dao.ofy().get(entityKey);
+    }
+
+    public ImmutableList<SampleSource> queryByTitle(final String title) {
+      Preconditions.checkNotNull(title, "title may not be null.");
+
+      final String normalizedTitle = normalization.normalize(title);
+
+      final Query<SampleSource> query = dao
+          .ofy().query(SampleSource.class).filter("normalizedTitle = ", normalizedTitle);
+
+      return ImmutableList.copyOf(query);
+    }
+
+    public Key<SampleSource> commit(final SampleSource sampleSource) {
+      Preconditions.checkNotNull(sampleSource, "sampleSource may not be null.");
+
+      return dao.ofy().put(sampleSource);
+    }
+
+    public void delete(final SampleSource sampleSource) {
+      Preconditions.checkNotNull(sampleSource, "sampleSource may not be null.");
+
+      dao.ofy().delete(sampleSource);
+    }
+
+    public Mutator from(final SampleSource original) {
+      return new Mutator(original);
+    }
+
+    public Builder create() {
+      return new Builder();
+    }
+
+    public class Builder {
+      private String title;
+      private Key<SampleSourceType> sampleSourceTypeKey;
+
+      Builder() {}
+
+      public Builder withTitle(final String title) {
+        this.title = title;
+
+        return this;
+      }
+
+      public Builder withSampleSourceType(final SampleSourceType sampleSourceType) {
+        Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
+
+        sampleSourceTypeKey = new Key<SampleSourceType>(SampleSourceType.class, sampleSourceType.getKey());
+
+        return this;
+      }
+
+      public SampleSource build() {
+        Preconditions.checkNotNull("title", "title may not be null.");
+
+        final String normalizedTitle = normalization.normalize(title);
+        final String key = normalizedTitle;
+
+        return new SampleSource(title, normalizedTitle, key, sampleSourceTypeKey);
+      }
+    }
+
+    public class Mutator {
+      private final SampleSource original;
+      private String newTitle;
+      private Key<SampleSourceType> newSampleSourceTypeKey;
+
+      Mutator(final SampleSource original) {
+        Preconditions.checkNotNull(original, "original may not be null.");
+
+        this.original = original;
+      }
+
+      public Mutator withTitle(final String newTitle) {
+        Preconditions.checkNotNull(newTitle, "newTitle may not be null.");
+
+        this.newTitle = newTitle;
+
+        return this;
+      }
+
+      public Mutator withSampleSourceType(final SampleSourceType sampleSourceType) {
+        Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
+
+        this.newSampleSourceTypeKey = new Key<SampleSourceType>(SampleSourceType.class, sampleSourceType.getKey());
+
+        return this;
+      }
+
+      public SampleSource generate() {
+        if ((newSampleSourceTypeKey == null) || (newTitle != null)) {
+          newSampleSourceTypeKey = original.getSampleSourceTypeKey();
+          final String newNormalizedTitle = normalization.normalize(newTitle);
+          final String key = original.getKey();
+
+          return new SampleSource(newTitle, newNormalizedTitle, key, newSampleSourceTypeKey);
+        } else {
+          return original;
+        }
+      }
+    }
   }
 }
