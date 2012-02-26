@@ -347,6 +347,22 @@ public class IntegrationTest {
     assertEquals(retrievedSS, query.get());
   }
 
+  // TODO: Mock out D.S. for further tests and let direct large tests suffice.
+
+  @Test
+  public void testSampleSourceType_StorageManager_getByKey() {
+    final SampleSourceType pendingSST = sstFactory.create().withTitle("Politician").build();
+
+    final Key<SampleSourceType> sstKey = objectify.put(pendingSST);
+
+    assertNotNull(sstKey);
+
+    final SampleSourceType retrievedSST = objectify.get(sstKey);
+
+    assertEquals(pendingSST, retrievedSST);
+    assertEquals(retrievedSST, sstFactory.getByKey(retrievedSST.getKey()));
+  }
+
   @Test
   public void testSampleSourceTypeFactory_queryByTitle() throws NotFoundException {
     final SampleSourceType pendingSST = sstFactory.create().withTitle("Politician").build();

@@ -98,6 +98,7 @@ public class SampleSourceType implements Serializable {
       return dao.ofy().get(entityKey);
     }
 
+    // TODO: This really should be by the normalized form.
     public ImmutableList<SampleSourceType> queryByTitle(final String title) {
       Preconditions.checkNotNull(title, "title may not be null.");
 
