@@ -1,0 +1,11 @@
+Samplr is a personal work-in-progress to track the use of samples across music.
+
+= Embarrassing Things
+- Clean-ups are needed with the imported third-party code.
+
+= Future Directions
+- Finish data model implementation.
+-- Tests
+-- Validations
+- Controller Creation
+- User Interface
