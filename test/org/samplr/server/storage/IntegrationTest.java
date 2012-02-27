@@ -5,9 +5,11 @@ package org.samplr.server.storage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.samplr.server.utility.Normalization;
 import org.samplr.shared.model.SampleSource;
@@ -399,5 +401,17 @@ public class IntegrationTest {
 
     assertEquals("Liar", mutated.getTitle());
     assertEquals("liar", mutated.getNormalizedTitle());
+  }
+  
+  @Test
+  @Ignore
+  public void testSampleSourceTypeFactory_commit() {
+    fail("Not implemented.");
+  }
+  
+  @Test
+  @Ignore
+  public void testSampleSourceTypeFactory_delete() {
+    fail("Not implemented.");
   }
 }
