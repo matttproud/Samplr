@@ -451,4 +451,40 @@ public class IntegrationTest {
     
     assertNull(objectify.get(sstKey));
   }
+  
+  @Test
+  @Ignore
+  public void testSampleSourceFactory_getByKey() {
+    fail("Not implemented.");
+  }
+  
+  @Test
+  @Ignore
+  public void testSampleSourceFactory_queryByTitle() {
+    fail("Not implemented.");
+  }
+  
+  @Test
+  @Ignore
+  public void testSampleSourceFactory_from_Mutated() {
+    fail("Not implemented.");
+  }
+  
+  @Test
+  @Ignore
+  public void testSampleSourceFactory_from_Unmutated() {
+    fail("Not implemented.");
+  }
+  
+  @Test
+  @Ignore
+  public void testSampleSourceFactory_commit() {
+    fail("Not implemented.");
+  }
+  
+  @Test
+  @Ignore
+  public void testSampleSourceFactory_delete() {
+    fail("Not implemented.");
+  }
 }
