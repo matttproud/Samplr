@@ -384,7 +384,7 @@ public class IntegrationTest {
   }
 
   @Test
-  public void testSampleSourceTypeFactory_from() throws NotFoundException {
+  public void testSampleSourceTypeFactory_from_Mutated() throws NotFoundException {
     final SampleSourceType pendingSST = sstFactory.create().withTitle("Politician").build();
 
     final Key<SampleSourceType> sstKey = objectify.put(pendingSST);
@@ -401,6 +401,26 @@ public class IntegrationTest {
 
     assertEquals("Liar", mutated.getTitle());
     assertEquals("liar", mutated.getNormalizedTitle());
+  }
+  
+  @Test
+  public void testSampleSourceTypeFactory_from_Unmutated() {
+    final SampleSourceType pendingSST = sstFactory.create().withTitle("Politician").build();
+
+    final Key<SampleSourceType> sstKey = objectify.put(pendingSST);
+
+    assertNotNull(sstKey);
+
+    final SampleSourceType retrievedSST = objectify.get(sstKey);
+
+    assertEquals(pendingSST, retrievedSST);
+
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").withSampleSourceType(retrievedSST).build();
+
+    final SampleSourceType mutated = sstFactory.from(retrievedSST).generate();
+
+    assertEquals("Politician", mutated.getTitle());
+    assertEquals("politician", mutated.getNormalizedTitle());
   }
   
   @Test
