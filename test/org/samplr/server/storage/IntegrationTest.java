@@ -8,6 +8,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -466,9 +468,17 @@ public class IntegrationTest {
   }
   
   @Test
-  @Ignore
   public void testSampleSourceFactory_queryByTitle() {
-    fail("Not implemented.");
+    SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
+    
+    Key<SampleSource> ssKey = objectify.put(pendingSS);
+    
+    assertNotNull(ssKey);
+    
+    List<SampleSource> retrievedSS = ssFactory.queryByTitle("George W. Bush");
+    
+    assertEquals(1, retrievedSS.size());
+    assertEquals(pendingSS, retrievedSS.get(0));
   }
   
   @Test
