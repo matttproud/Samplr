@@ -424,9 +424,14 @@ public class IntegrationTest {
   }
   
   @Test
-  @Ignore
   public void testSampleSourceTypeFactory_commit() {
-    fail("Not implemented.");
+    final SampleSourceType pendingSST = sstFactory.create().withTitle("Politician").build();
+    
+    final Key<SampleSourceType> sstKey = sstFactory.commit(pendingSST);
+    
+    assertNotNull(sstKey);
+    
+    assertEquals(pendingSST, objectify.get(sstKey));
   }
   
   @Test
