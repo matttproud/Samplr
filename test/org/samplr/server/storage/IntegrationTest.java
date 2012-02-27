@@ -453,9 +453,16 @@ public class IntegrationTest {
   }
   
   @Test
-  @Ignore
   public void testSampleSourceFactory_getByKey() {
-    fail("Not implemented.");
+    SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
+ 
+    Key<SampleSource> ssKey = objectify.put(pendingSS);
+    
+    assertNotNull(ssKey);
+    
+    SampleSource retrievedSS = ssFactory.getByKey("george w. bush");
+    
+    assertEquals(pendingSS, retrievedSS);
   }
   
   @Test
