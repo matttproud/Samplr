@@ -5,6 +5,7 @@ package org.samplr.server.storage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.junit.After;
@@ -434,9 +435,20 @@ public class IntegrationTest {
     assertEquals(pendingSST, objectify.get(sstKey));
   }
   
-  @Test
-  @Ignore
+  @Test(expected = NotFoundException.class)
   public void testSampleSourceTypeFactory_delete() {
-    fail("Not implemented.");
+    final SampleSourceType pendingSST = sstFactory.create().withTitle("Politician").build();
+    
+    final Key<SampleSourceType> sstKey = objectify.put(pendingSST);
+    
+    assertNotNull(sstKey);
+    
+    final SampleSourceType retrievedSST = objectify.get(sstKey);
+    
+    assertEquals(pendingSST, retrievedSST);
+    
+    sstFactory.delete(retrievedSST);
+    
+    assertNull(objectify.get(sstKey));
   }
 }
