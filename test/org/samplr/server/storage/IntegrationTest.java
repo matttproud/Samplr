@@ -519,9 +519,20 @@ public class IntegrationTest {
   }
 
   @Test
-  @Ignore
   public void testSampleSourceFactory_from_Unmutated() {
-    fail("Not implemented.");
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
+
+    final Key<SampleSource> ssKey = objectify.put(pendingSS);
+
+    assertNotNull(ssKey);
+
+    final SampleSource unmutatedSS = ssFactory.from(pendingSS).generate();
+
+    ssFactory.commit(unmutatedSS);
+
+    final SampleSource retrievedSS = objectify.get(ssKey);
+
+    assertEquals(unmutatedSS, retrievedSS);
   }
 
   @Test
