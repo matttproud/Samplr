@@ -28,10 +28,11 @@ import com.googlecode.objectify.Query;
 
 /**
  * @author mtp
- *
+ * 
  */
 public class IntegrationTest {
-  private final LocalServiceTestHelper localServiceTestHelper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
+  private final LocalServiceTestHelper localServiceTestHelper = new LocalServiceTestHelper(
+      new LocalDatastoreServiceTestConfig());
   private Objectify objectify;
   private Normalization normalization;
   private DAO dao;
@@ -79,7 +80,8 @@ public class IntegrationTest {
 
     assertEquals(pending, retrieved);
 
-    final SampleSourceType pendingMutation = sstFactory.from(retrieved).withTitle("Liar").generate();
+    final SampleSourceType pendingMutation = sstFactory.from(retrieved).withTitle("Liar")
+        .generate();
 
     objectify.put(pendingMutation);
 
@@ -116,12 +118,12 @@ public class IntegrationTest {
 
     assertEquals(pending, retrieved);
 
-    final Query<SampleSourceType> query = objectify.query(SampleSourceType.class).filter("key = ", retrieved.getNormalizedTitle());
+    final Query<SampleSourceType> query = objectify.query(SampleSourceType.class).filter("key = ",
+        retrieved.getNormalizedTitle());
 
     assertEquals(1, query.count());
     assertEquals(retrieved, query.get());
   }
-
 
   @Test
   public void testSampleSourceType_Query_Title() {
@@ -135,7 +137,8 @@ public class IntegrationTest {
 
     assertEquals(pending, retrieved);
 
-    final Query<SampleSourceType> query = objectify.query(SampleSourceType.class).filter("title = ", "Politician");
+    final Query<SampleSourceType> query = objectify.query(SampleSourceType.class).filter(
+        "title = ", "Politician");
 
     assertEquals(1, query.count());
     assertEquals(retrieved, query.get());
@@ -153,7 +156,8 @@ public class IntegrationTest {
 
     assertEquals(pending, retrieved);
 
-    final Query<SampleSourceType> query = objectify.query(SampleSourceType.class).filter("normalizedTitle = ", "politician");
+    final Query<SampleSourceType> query = objectify.query(SampleSourceType.class).filter(
+        "normalizedTitle = ", "politician");
 
     assertEquals(1, query.count());
     assertEquals(retrieved, query.get());
@@ -171,7 +175,8 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").withSampleSourceType(retrievedSST).build();
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush")
+        .withSampleSourceType(retrievedSST).build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
 
@@ -194,7 +199,8 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").withSampleSourceType(retrievedSST).build();
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush")
+        .withSampleSourceType(retrievedSST).build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
 
@@ -204,7 +210,8 @@ public class IntegrationTest {
 
     assertEquals(pendingSS, retrievedSS);
 
-    final SampleSource pendingSSMutation = ssFactory.from(retrievedSS).withTitle("Woodrow Wilson").generate();
+    final SampleSource pendingSSMutation = ssFactory.from(retrievedSS).withTitle("Woodrow Wilson")
+        .generate();
 
     objectify.put(pendingSSMutation);
 
@@ -225,7 +232,8 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").withSampleSourceType(retrievedSST).build();
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush")
+        .withSampleSourceType(retrievedSST).build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
 
@@ -252,7 +260,8 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").withSampleSourceType(retrievedSST).build();
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush")
+        .withSampleSourceType(retrievedSST).build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
 
@@ -262,7 +271,8 @@ public class IntegrationTest {
 
     assertEquals(pendingSS, retrievedSS);
 
-    final Query<SampleSource> query = objectify.query(SampleSource.class).filter("key =", retrievedSS.getKey());
+    final Query<SampleSource> query = objectify.query(SampleSource.class).filter("key =",
+        retrievedSS.getKey());
 
     assertEquals(1, query.count());
     assertEquals(retrievedSS, query.get());
@@ -280,7 +290,8 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").withSampleSourceType(retrievedSST).build();
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush")
+        .withSampleSourceType(retrievedSST).build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
 
@@ -290,7 +301,8 @@ public class IntegrationTest {
 
     assertEquals(pendingSS, retrievedSS);
 
-    final Query<SampleSource> query = objectify.query(SampleSource.class).filter("title =", "George W. Bush");
+    final Query<SampleSource> query = objectify.query(SampleSource.class).filter("title =",
+        "George W. Bush");
 
     assertEquals(1, query.count());
     assertEquals(retrievedSS, query.get());
@@ -308,7 +320,8 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").withSampleSourceType(retrievedSST).build();
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush")
+        .withSampleSourceType(retrievedSST).build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
 
@@ -318,7 +331,8 @@ public class IntegrationTest {
 
     assertEquals(pendingSS, retrievedSS);
 
-    final Query<SampleSource> query = objectify.query(SampleSource.class).filter("normalizedTitle =", "george w. bush");
+    final Query<SampleSource> query = objectify.query(SampleSource.class).filter(
+        "normalizedTitle =", "george w. bush");
 
     assertEquals(1, query.count());
     assertEquals(retrievedSS, query.get());
@@ -336,7 +350,8 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").withSampleSourceType(retrievedSST).build();
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush")
+        .withSampleSourceType(retrievedSST).build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
 
@@ -346,7 +361,8 @@ public class IntegrationTest {
 
     assertEquals(pendingSS, retrievedSS);
 
-    final Query<SampleSource> query = objectify.query(SampleSource.class).filter("sampleSourceTypeKey =", retrievedSST);
+    final Query<SampleSource> query = objectify.query(SampleSource.class).filter(
+        "sampleSourceTypeKey =", retrievedSST);
 
     assertEquals(1, query.count());
     assertEquals(retrievedSS, query.get());
@@ -380,7 +396,8 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").withSampleSourceType(retrievedSST).build();
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush")
+        .withSampleSourceType(retrievedSST).build();
 
     assertEquals(1, sstFactory.queryByTitle(pendingSST.getTitle()).size());
     assertEquals(pendingSST, sstFactory.queryByTitle(pendingSST.getTitle()).get(0));
@@ -398,14 +415,15 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").withSampleSourceType(retrievedSST).build();
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush")
+        .withSampleSourceType(retrievedSST).build();
 
     final SampleSourceType mutated = sstFactory.from(retrievedSST).withTitle("Liar").generate();
 
     assertEquals("Liar", mutated.getTitle());
     assertEquals("liar", mutated.getNormalizedTitle());
   }
-  
+
   @Test
   public void testSampleSourceTypeFactory_from_Unmutated() {
     final SampleSourceType pendingSST = sstFactory.create().withTitle("Politician").build();
@@ -418,87 +436,100 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").withSampleSourceType(retrievedSST).build();
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush")
+        .withSampleSourceType(retrievedSST).build();
 
     final SampleSourceType mutated = sstFactory.from(retrievedSST).generate();
 
     assertEquals("Politician", mutated.getTitle());
     assertEquals("politician", mutated.getNormalizedTitle());
   }
-  
+
   @Test
   public void testSampleSourceTypeFactory_commit() {
     final SampleSourceType pendingSST = sstFactory.create().withTitle("Politician").build();
-    
+
     final Key<SampleSourceType> sstKey = sstFactory.commit(pendingSST);
-    
+
     assertNotNull(sstKey);
-    
+
     assertEquals(pendingSST, objectify.get(sstKey));
   }
-  
+
   @Test(expected = NotFoundException.class)
   public void testSampleSourceTypeFactory_delete() {
     final SampleSourceType pendingSST = sstFactory.create().withTitle("Politician").build();
-    
+
     final Key<SampleSourceType> sstKey = objectify.put(pendingSST);
-    
+
     assertNotNull(sstKey);
-    
+
     final SampleSourceType retrievedSST = objectify.get(sstKey);
-    
+
     assertEquals(pendingSST, retrievedSST);
-    
+
     sstFactory.delete(retrievedSST);
-    
+
     assertNull(objectify.get(sstKey));
   }
-  
+
   @Test
   public void testSampleSourceFactory_getByKey() {
-    SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
- 
-    Key<SampleSource> ssKey = objectify.put(pendingSS);
-    
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
+
+    final Key<SampleSource> ssKey = objectify.put(pendingSS);
+
     assertNotNull(ssKey);
-    
-    SampleSource retrievedSS = ssFactory.getByKey("george w. bush");
-    
+
+    final SampleSource retrievedSS = ssFactory.getByKey("george w. bush");
+
     assertEquals(pendingSS, retrievedSS);
   }
-  
+
   @Test
   public void testSampleSourceFactory_queryByTitle() {
-    SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
-    
-    Key<SampleSource> ssKey = objectify.put(pendingSS);
-    
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
+
+    final Key<SampleSource> ssKey = objectify.put(pendingSS);
+
     assertNotNull(ssKey);
-    
-    List<SampleSource> retrievedSS = ssFactory.queryByTitle("George W. Bush");
-    
+
+    final List<SampleSource> retrievedSS = ssFactory.queryByTitle("George W. Bush");
+
     assertEquals(1, retrievedSS.size());
     assertEquals(pendingSS, retrievedSS.get(0));
   }
-  
+
   @Test
-  @Ignore
   public void testSampleSourceFactory_from_Mutated() {
-    fail("Not implemented.");
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
+
+    final Key<SampleSource> ssKey = objectify.put(pendingSS);
+
+    assertNotNull(ssKey);
+
+    final SampleSource mutatedSS = ssFactory.from(pendingSS).withTitle("George Walker Bush")
+        .generate();
+
+    ssFactory.commit(mutatedSS);
+
+    final SampleSource retrievedSS = objectify.get(ssKey);
+
+    assertEquals(mutatedSS, retrievedSS);
   }
-  
+
   @Test
   @Ignore
   public void testSampleSourceFactory_from_Unmutated() {
     fail("Not implemented.");
   }
-  
+
   @Test
   @Ignore
   public void testSampleSourceFactory_commit() {
     fail("Not implemented.");
   }
-  
+
   @Test
   @Ignore
   public void testSampleSourceFactory_delete() {
