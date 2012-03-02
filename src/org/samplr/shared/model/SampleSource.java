@@ -9,6 +9,7 @@ import org.samplr.server.storage.DAO;
 import org.samplr.server.utility.Normalization;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
@@ -129,13 +130,13 @@ public class SampleSource {
     }
 
     public class Builder {
-      private String title;
-      private Key<SampleSourceType> sampleSourceTypeKey;
+      private Optional<String> title = Optional.absent();
+      private Optional<Key<SampleSourceType>> sampleSourceTypeKey = Optional.absent();
 
       Builder() {}
 
       public Builder withTitle(final String title) {
-        this.title = title;
+        this.title = Optional.of(title);
 
         return this;
       }
@@ -143,7 +144,7 @@ public class SampleSource {
       public Builder withSampleSourceType(final SampleSourceType sampleSourceType) {
         Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
 
-        sampleSourceTypeKey = new Key<SampleSourceType>(SampleSourceType.class, sampleSourceType.getKey());
+        sampleSourceTypeKey = Optional.of(new Key<SampleSourceType>(SampleSourceType.class, sampleSourceType.getKey()));
 
         return this;
       }
@@ -151,17 +152,19 @@ public class SampleSource {
       public SampleSource build() {
         Preconditions.checkNotNull("title", "title may not be null.");
 
-        final String normalizedTitle = normalization.normalize(title);
+        final String futureTitle = title.get();
+        final String normalizedTitle = normalization.normalize(futureTitle);
         final String key = normalizedTitle;
+        final Key<SampleSourceType> futureSampleSourceTypeKey = sampleSourceTypeKey.get();
 
-        return new SampleSource(title, normalizedTitle, key, sampleSourceTypeKey);
+        return new SampleSource(futureTitle, normalizedTitle, key, futureSampleSourceTypeKey);
       }
     }
 
     public class Mutator {
       private final SampleSource original;
-      private String newTitle;
-      private Key<SampleSourceType> newSampleSourceTypeKey;
+      private Optional<String> newTitle = Optional.absent();
+      private Optional<Key<SampleSourceType>> newSampleSourceTypeKey = Optional.absent();
 
       Mutator(final SampleSource original) {
         Preconditions.checkNotNull(original, "original may not be null.");
@@ -170,9 +173,7 @@ public class SampleSource {
       }
 
       public Mutator withTitle(final String newTitle) {
-        Preconditions.checkNotNull(newTitle, "newTitle may not be null.");
-
-        this.newTitle = newTitle;
+        this.newTitle = Optional.of(newTitle);
 
         return this;
       }
@@ -180,21 +181,17 @@ public class SampleSource {
       public Mutator withSampleSourceType(final SampleSourceType sampleSourceType) {
         Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
 
-        this.newSampleSourceTypeKey = new Key<SampleSourceType>(SampleSourceType.class, sampleSourceType.getKey());
+        this.newSampleSourceTypeKey = Optional.of(new Key<SampleSourceType>(SampleSourceType.class, sampleSourceType.getKey()));
 
         return this;
       }
 
       public SampleSource generate() {
-        if ((newSampleSourceTypeKey == null) || (newTitle != null)) {
-          newSampleSourceTypeKey = original.getSampleSourceTypeKey();
-          final String newNormalizedTitle = normalization.normalize(newTitle);
-          final String key = original.getKey();
+        final String futureTitle = newTitle.or(original.getTitle());
+        final String futureNormalizedTitle = normalization.normalize(futureTitle);
+        final Key<SampleSourceType> futureKey = newSampleSourceTypeKey.or(original.getSampleSourceTypeKey());
 
-          return new SampleSource(newTitle, newNormalizedTitle, key, newSampleSourceTypeKey);
-        } else {
-          return original;
-        }
+        return new SampleSource(futureTitle, futureNormalizedTitle, original.getKey(), futureKey);
       }
     }
   }

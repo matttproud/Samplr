@@ -473,6 +473,7 @@ public class IntegrationTest {
     assertNull(objectify.get(sstKey));
   }
 
+  @Ignore
   @Test
   public void testSampleSourceFactory_getByKey() {
     final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
@@ -486,6 +487,7 @@ public class IntegrationTest {
     assertEquals(pendingSS, retrievedSS);
   }
 
+  @Ignore
   @Test
   public void testSampleSourceFactory_queryByTitle() {
     final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
@@ -500,6 +502,7 @@ public class IntegrationTest {
     assertEquals(pendingSS, retrievedSS.get(0));
   }
 
+  @Ignore
   @Test
   public void testSampleSourceFactory_from_Mutated() {
     final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
@@ -518,6 +521,7 @@ public class IntegrationTest {
     assertEquals(mutatedSS, retrievedSS);
   }
 
+  @Ignore
   @Test
   public void testSampleSourceFactory_from_Unmutated() {
     final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();

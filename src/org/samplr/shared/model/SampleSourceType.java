@@ -11,6 +11,7 @@ import org.samplr.server.storage.DAO;
 import org.samplr.server.utility.Normalization;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
@@ -131,49 +132,43 @@ public class SampleSourceType implements Serializable {
     }
 
     public class Builder {
-      private String title;
+      private Optional<String> title = Optional.absent();
 
       Builder() {}
 
       public Builder withTitle(final String title) {
-        this.title = title;
+        this.title = Optional.of(title);
 
         return this;
       }
 
       public SampleSourceType build() {
-        Preconditions.checkNotNull("title", "title may not be null.");
-
-        final String normalizedTitle = normalization.normalize(title);
+        final String normalizedTitle = normalization.normalize(title.get());
         final String key = normalizedTitle;
 
-        return new SampleSourceType(title, normalizedTitle, key);
+        return new SampleSourceType(title.get(), normalizedTitle, key);
       }
     }
 
     public class Mutator {
       private final SampleSourceType original;
-      private String newTitle;
+      private Optional<String> newTitle = Optional.absent();
 
       Mutator(final SampleSourceType original) {
         this.original = original;
       }
 
       public Mutator withTitle(final String newTitle) {
-        this.newTitle = newTitle;
+        this.newTitle = Optional.of(newTitle);
 
         return this;
       }
 
       public SampleSourceType generate() {
-        if (newTitle != null) {
-          final String newNormalizedTitle = normalization.normalize(newTitle);
-          final String key = original.getKey();
+        final String futureTitle = newTitle.or(original.getTitle());
+        final String futureNormalizedTitle = normalization.normalize(futureTitle);
 
-          return new SampleSourceType(newTitle, newNormalizedTitle, key);
-        } else {
-          return original;
-        }
+        return new SampleSourceType(futureTitle, futureNormalizedTitle, original.getKey());
       }
     }
   }
