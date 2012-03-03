@@ -473,10 +473,13 @@ public class IntegrationTest {
     assertNull(objectify.get(sstKey));
   }
 
-  @Ignore
   @Test
   public void testSampleSourceFactory_getByKey() {
-    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
+    final SampleSourceType retrievedSST = createDummySampleSourceType();
+
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush")
+        .withSampleSourceType(retrievedSST)
+        .build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
 
@@ -487,10 +490,12 @@ public class IntegrationTest {
     assertEquals(pendingSS, retrievedSS);
   }
 
-  @Ignore
   @Test
   public void testSampleSourceFactory_queryByTitle() {
-    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
+    final SampleSourceType retrievedSST = createDummySampleSourceType();
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush")
+        .withSampleSourceType(retrievedSST)
+        .build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
 
@@ -502,10 +507,12 @@ public class IntegrationTest {
     assertEquals(pendingSS, retrievedSS.get(0));
   }
 
-  @Ignore
   @Test
   public void testSampleSourceFactory_from_Mutated() {
-    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
+    final SampleSourceType retrievedSST = createDummySampleSourceType();
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush")
+        .withSampleSourceType(retrievedSST)
+        .build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
 
@@ -521,10 +528,12 @@ public class IntegrationTest {
     assertEquals(mutatedSS, retrievedSS);
   }
 
-  @Ignore
   @Test
   public void testSampleSourceFactory_from_Unmutated() {
-    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush").build();
+    final SampleSourceType retrievedSST = createDummySampleSourceType();
+    final SampleSource pendingSS = ssFactory.create().withTitle("George W. Bush")
+        .withSampleSourceType(retrievedSST)
+        .build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
 
@@ -549,5 +558,12 @@ public class IntegrationTest {
   @Ignore
   public void testSampleSourceFactory_delete() {
     fail("Not implemented.");
+  }
+
+  private SampleSourceType createDummySampleSourceType() {
+    final SampleSourceType pendingSST = sstFactory.create().withTitle("Politician").build();
+    final Key<SampleSourceType> sstKey = objectify.put(pendingSST);
+    final SampleSourceType retrievedSST = objectify.get(sstKey);
+    return retrievedSST;
   }
 }
