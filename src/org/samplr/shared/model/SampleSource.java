@@ -150,8 +150,6 @@ public class SampleSource {
       }
 
       public SampleSource build() {
-        Preconditions.checkNotNull("title", "title may not be null.");
-
         final String futureTitle = title.get();
         final String normalizedTitle = normalization.normalize(futureTitle);
         final String key = normalizedTitle;
