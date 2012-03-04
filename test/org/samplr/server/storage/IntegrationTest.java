@@ -518,7 +518,12 @@ public class IntegrationTest {
 
     assertNotNull(ssKey);
 
+    final SampleSourceType pendingSST = sstFactory.create().withTitle("Apologist").build();
+    final Key<SampleSourceType> alternativeSSTKey = objectify.put(pendingSST);
+    final SampleSourceType alternativeSST = objectify.get(alternativeSSTKey);
+
     final SampleSource mutatedSS = ssFactory.from(pendingSS).withTitle("George Walker Bush")
+        .withSampleSourceType(alternativeSST)
         .generate();
 
     ssFactory.commit(mutatedSS);
@@ -547,6 +552,7 @@ public class IntegrationTest {
 
     assertEquals(unmutatedSS, retrievedSS);
   }
+
 
   @Test
   @Ignore
