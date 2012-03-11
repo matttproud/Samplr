@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.samplr.server.storage.DAO;
 import org.samplr.server.storage.ModelRegistry;
+import org.samplr.shared.model.SampleSourceType;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.inject.Guice;
@@ -46,5 +47,12 @@ public class ServerModuleTest {
     final DAO dao = injector.getInstance(DAO.class);
 
     assertNotNull(dao);
+  }
+
+  @Test
+  public void testProvision_SampleSourceType_MutationManager() {
+    final SampleSourceType.MutationManager mm = injector.getInstance(SampleSourceType.MutationManager.class);
+
+    assertNotNull(mm);
   }
 }

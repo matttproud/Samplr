@@ -78,6 +78,64 @@ public class SampleSourceType implements Serializable {
     return (Objects.equal(key, casted.getKey()) && Objects.equal(title, casted.getTitle()) && Objects.equal(normalizedTitle, casted.getNormalizedTitle()));
   }
 
+  public static class Builder {
+    private final Normalization normalization = new Normalization();
+
+    private Optional<String> title = Optional.absent();
+
+    Builder() {}
+
+    public Builder withTitle(final String title) {
+      this.title = Optional.of(title);
+
+      return this;
+    }
+
+    public SampleSourceType build() {
+      final String normalizedTitle = normalization.normalize(title.get());
+      final String key = normalizedTitle;
+
+      return new SampleSourceType(title.get(), normalizedTitle, key);
+    }
+  }
+
+  public static class Mutator {
+    private final Normalization normalization = new Normalization();
+    private final SampleSourceType original;
+
+    private Optional<String> newTitle = Optional.absent();
+
+    Mutator(final SampleSourceType original) {
+      this.original = original;
+    }
+
+    public Mutator withTitle(final String newTitle) {
+      this.newTitle = Optional.of(newTitle);
+
+      return this;
+    }
+
+    public SampleSourceType generate() {
+      final String futureTitle = newTitle.or(original.getTitle());
+      final String futureNormalizedTitle = normalization.normalize(futureTitle);
+
+      return new SampleSourceType(futureTitle, futureNormalizedTitle, original.getKey());
+    }
+  }
+
+  @Singleton
+  public static class MutationManager {
+
+    public Mutator from(final SampleSourceType original) {
+      return new Mutator(original);
+    }
+
+    public Builder create() {
+      return new Builder();
+    }
+
+  }
+
   @Singleton
   public static class StorageManager {
     private final DAO dao;
@@ -97,7 +155,6 @@ public class SampleSourceType implements Serializable {
       return dao.ofy().get(entityKey);
     }
 
-    // TODO: This really should be by the normalized form.
     public ImmutableList<SampleSourceType> queryByTitle(final String title) {
       Preconditions.checkNotNull(title, "title may not be null.");
 
@@ -119,55 +176,6 @@ public class SampleSourceType implements Serializable {
       Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
 
       dao.ofy().delete(sampleSourceType);
-    }
-
-    public Mutator from(final SampleSourceType original) {
-      return new Mutator(original);
-    }
-
-    public Builder create() {
-      return new Builder();
-    }
-
-    public class Builder {
-      private Optional<String> title = Optional.absent();
-
-      Builder() {}
-
-      public Builder withTitle(final String title) {
-        this.title = Optional.of(title);
-
-        return this;
-      }
-
-      public SampleSourceType build() {
-        final String normalizedTitle = normalization.normalize(title.get());
-        final String key = normalizedTitle;
-
-        return new SampleSourceType(title.get(), normalizedTitle, key);
-      }
-    }
-
-    public class Mutator {
-      private final SampleSourceType original;
-      private Optional<String> newTitle = Optional.absent();
-
-      Mutator(final SampleSourceType original) {
-        this.original = original;
-      }
-
-      public Mutator withTitle(final String newTitle) {
-        this.newTitle = Optional.of(newTitle);
-
-        return this;
-      }
-
-      public SampleSourceType generate() {
-        final String futureTitle = newTitle.or(original.getTitle());
-        final String futureNormalizedTitle = normalization.normalize(futureTitle);
-
-        return new SampleSourceType(futureTitle, futureNormalizedTitle, original.getKey());
-      }
     }
   }
 }
