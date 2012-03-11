@@ -555,9 +555,17 @@ public class IntegrationTest {
 
 
   @Test
-  @Ignore
   public void testSampleSourceFactory_commit() {
-    fail("Not implemented.");
+    final SampleSourceType retrievedSST = createDummySampleSourceType();
+    final SampleSource pendingSS = ssFactory.create().withSampleSourceType(retrievedSST).withTitle("Foo").build();
+
+    final Key<SampleSource> ssKey = ssFactory.commit(pendingSS);
+
+    assertNotNull(ssKey);
+
+    final SampleSource retrievedSS = objectify.get(ssKey);
+
+    assertEquals(pendingSS, retrievedSS);
   }
 
   @Test
