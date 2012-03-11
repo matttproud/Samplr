@@ -22,6 +22,8 @@
   <source path='client'/>
   <source path='shared'/>
   
+  <super-source path="annotation"/>
+  
   <inherits name='com.google.common.base.Base'/>
   <inherits name='com.google.common.collect.Collect' />
   <inherits name="com.googlecode.objectify.Objectify" />
