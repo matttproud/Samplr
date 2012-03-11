@@ -6,13 +6,11 @@ package org.samplr.server.storage;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.samplr.server.utility.Normalization;
 import org.samplr.shared.model.SampleSource;
@@ -568,10 +566,22 @@ public class IntegrationTest {
     assertEquals(pendingSS, retrievedSS);
   }
 
-  @Test
-  @Ignore
+  @Test(expected = NotFoundException.class)
   public void testSampleSourceFactory_delete() {
-    fail("Not implemented.");
+    final SampleSourceType retrievedSST = createDummySampleSourceType();
+    final SampleSource pendingSS = ssFactory.create().withSampleSourceType(retrievedSST).withTitle("Foo").build();
+
+    final Key<SampleSource> ssKey = ssFactory.commit(pendingSS);
+
+    assertNotNull(ssKey);
+
+    final SampleSource retrievedSS = objectify.get(ssKey);
+
+    assertEquals(pendingSS, retrievedSS);
+
+    ssFactory.delete(retrievedSS);
+
+    objectify.get(ssKey);
   }
 
   private SampleSourceType createDummySampleSourceType() {
