@@ -8,7 +8,7 @@ import java.io.Serializable;
 import javax.persistence.Id;
 
 import org.samplr.server.storage.DAO;
-import org.samplr.server.utility.Normalization;
+import org.samplr.shared.utility.Normalization;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
@@ -81,15 +81,13 @@ public class SampleSourceType implements Serializable {
   @Singleton
   public static class StorageManager {
     private final DAO dao;
-    private final Normalization normalization;
+    private final Normalization normalization = new Normalization();
 
     @Inject
-    public StorageManager(final DAO dao, final Normalization normalization) {
+    public StorageManager(final DAO dao) {
       Preconditions.checkNotNull(dao, "dao may not be null.");
-      Preconditions.checkNotNull(normalization, "normalization may not be null.");
 
       this.dao = dao;
-      this.normalization = normalization;
     }
 
     public SampleSourceType getByKey(final String key) throws NotFoundException {

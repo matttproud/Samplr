@@ -1,4 +1,4 @@
-package org.samplr.server.utility;
+package org.samplr.shared.utility;
 
 import com.google.inject.Singleton;
 

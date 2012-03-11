@@ -12,7 +12,6 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.samplr.server.utility.Normalization;
 import org.samplr.shared.model.SampleSource;
 import org.samplr.shared.model.SampleSourceType;
 
@@ -32,7 +31,7 @@ public class IntegrationTest {
   private final LocalServiceTestHelper localServiceTestHelper = new LocalServiceTestHelper(
       new LocalDatastoreServiceTestConfig());
   private Objectify objectify;
-  private Normalization normalization;
+
   private DAO dao;
   private SampleSourceType.StorageManager sstFactory;
   private SampleSource.StorageManager ssFactory;
@@ -40,12 +39,10 @@ public class IntegrationTest {
   @Before
   public void setUp() {
     localServiceTestHelper.setUp();
-
     objectify = ObjectifyService.begin();
-    normalization = new Normalization();
     dao = new DAO();
-    sstFactory = new SampleSourceType.StorageManager(dao, normalization);
-    ssFactory = new SampleSource.StorageManager(dao, normalization);
+    sstFactory = new SampleSourceType.StorageManager(dao);
+    ssFactory = new SampleSource.StorageManager(dao);
   }
 
   @After
