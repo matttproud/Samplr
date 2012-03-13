@@ -33,18 +33,18 @@ public class IntegrationTest {
   private Objectify objectify;
 
   private DAO dao;
-  private SampleSourceType.StorageManager sstStorageManager;
-  private SampleSource.StorageManager ssStorageManager;
+  private Manager manager;
   private SampleSourceType.MutationManager sstMutationManager;
+  private SampleSource.MutationManager ssMutationManager;
 
   @Before
   public void setUp() {
     localServiceTestHelper.setUp();
     objectify = ObjectifyService.begin();
     dao = new DAO();
-    sstStorageManager = new SampleSourceType.StorageManager(dao);
-    ssStorageManager = new SampleSource.StorageManager(dao);
+    manager = new Manager(dao);
     sstMutationManager = new SampleSourceType.MutationManager();
+    ssMutationManager = new SampleSource.MutationManager();
   }
 
   @After
@@ -172,7 +172,7 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssStorageManager.create().withTitle("George W. Bush")
+    final SampleSource pendingSS = ssMutationManager.create().withTitle("George W. Bush")
         .withSampleSourceType(retrievedSST).build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
@@ -196,7 +196,7 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssStorageManager.create().withTitle("George W. Bush")
+    final SampleSource pendingSS = ssMutationManager.create().withTitle("George W. Bush")
         .withSampleSourceType(retrievedSST).build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
@@ -207,7 +207,7 @@ public class IntegrationTest {
 
     assertEquals(pendingSS, retrievedSS);
 
-    final SampleSource pendingSSMutation = ssStorageManager.from(retrievedSS).withTitle("Woodrow Wilson")
+    final SampleSource pendingSSMutation = ssMutationManager.from(retrievedSS).withTitle("Woodrow Wilson")
         .generate();
 
     objectify.put(pendingSSMutation);
@@ -229,7 +229,7 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssStorageManager.create().withTitle("George W. Bush")
+    final SampleSource pendingSS = ssMutationManager.create().withTitle("George W. Bush")
         .withSampleSourceType(retrievedSST).build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
@@ -257,7 +257,7 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssStorageManager.create().withTitle("George W. Bush")
+    final SampleSource pendingSS = ssMutationManager.create().withTitle("George W. Bush")
         .withSampleSourceType(retrievedSST).build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
@@ -287,7 +287,7 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssStorageManager.create().withTitle("George W. Bush")
+    final SampleSource pendingSS = ssMutationManager.create().withTitle("George W. Bush")
         .withSampleSourceType(retrievedSST).build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
@@ -317,7 +317,7 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssStorageManager.create().withTitle("George W. Bush")
+    final SampleSource pendingSS = ssMutationManager.create().withTitle("George W. Bush")
         .withSampleSourceType(retrievedSST).build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
@@ -347,7 +347,7 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssStorageManager.create().withTitle("George W. Bush")
+    final SampleSource pendingSS = ssMutationManager.create().withTitle("George W. Bush")
         .withSampleSourceType(retrievedSST).build();
 
     final Key<SampleSource> ssKey = objectify.put(pendingSS);
@@ -378,7 +378,7 @@ public class IntegrationTest {
     final SampleSourceType retrievedSST = objectify.get(sstKey);
 
     assertEquals(pendingSST, retrievedSST);
-    assertEquals(retrievedSST, sstStorageManager.getByKey(retrievedSST.getKey()));
+    assertEquals(retrievedSST, manager.sampleSourceType().getByKey(retrievedSST.getKey()));
   }
 
   @Test
@@ -393,11 +393,11 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssStorageManager.create().withTitle("George W. Bush")
+    final SampleSource pendingSS = ssMutationManager.create().withTitle("George W. Bush")
         .withSampleSourceType(retrievedSST).build();
 
-    assertEquals(1, sstStorageManager.queryByTitle(pendingSST.getTitle()).size());
-    assertEquals(pendingSST, sstStorageManager.queryByTitle(pendingSST.getTitle()).get(0));
+    assertEquals(1, manager.sampleSourceType().queryByTitle(pendingSST.getTitle()).size());
+    assertEquals(pendingSST, manager.sampleSourceType().queryByTitle(pendingSST.getTitle()).get(0));
   }
 
   @Test
@@ -412,7 +412,7 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssStorageManager.create().withTitle("George W. Bush")
+    final SampleSource pendingSS = ssMutationManager.create().withTitle("George W. Bush")
         .withSampleSourceType(retrievedSST).build();
 
     final SampleSourceType mutated = sstMutationManager.from(retrievedSST).withTitle("Liar").generate();
@@ -433,7 +433,7 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    final SampleSource pendingSS = ssStorageManager.create().withTitle("George W. Bush")
+    final SampleSource pendingSS = ssMutationManager.create().withTitle("George W. Bush")
         .withSampleSourceType(retrievedSST).build();
 
     final SampleSourceType mutated = sstMutationManager.from(retrievedSST).generate();
@@ -446,7 +446,7 @@ public class IntegrationTest {
   public void testSampleSourceTypeFactory_commit() {
     final SampleSourceType pendingSST = sstMutationManager.create().withTitle("Politician").build();
 
-    final Key<SampleSourceType> sstKey = sstStorageManager.commit(pendingSST);
+    final Key<SampleSourceType> sstKey = manager.sampleSourceType().commit(pendingSST);
 
     assertNotNull(sstKey);
 
@@ -465,7 +465,7 @@ public class IntegrationTest {
 
     assertEquals(pendingSST, retrievedSST);
 
-    sstStorageManager.delete(retrievedSST);
+    manager.sampleSourceType().delete(retrievedSST);
 
     assertNull(objectify.get(sstKey));
   }
@@ -474,7 +474,7 @@ public class IntegrationTest {
   public void testSampleSourceFactory_getByKey() {
     final SampleSourceType retrievedSST = createDummySampleSourceType();
 
-    final SampleSource pendingSS = ssStorageManager.create().withTitle("George W. Bush")
+    final SampleSource pendingSS = ssMutationManager.create().withTitle("George W. Bush")
         .withSampleSourceType(retrievedSST)
         .build();
 
@@ -482,7 +482,7 @@ public class IntegrationTest {
 
     assertNotNull(ssKey);
 
-    final SampleSource retrievedSS = ssStorageManager.getByKey("george w. bush");
+    final SampleSource retrievedSS = manager.sampleSource().getByKey("george w. bush");
 
     assertEquals(pendingSS, retrievedSS);
   }
@@ -490,7 +490,7 @@ public class IntegrationTest {
   @Test
   public void testSampleSourceFactory_queryByTitle() {
     final SampleSourceType retrievedSST = createDummySampleSourceType();
-    final SampleSource pendingSS = ssStorageManager.create().withTitle("George W. Bush")
+    final SampleSource pendingSS = ssMutationManager.create().withTitle("George W. Bush")
         .withSampleSourceType(retrievedSST)
         .build();
 
@@ -498,7 +498,7 @@ public class IntegrationTest {
 
     assertNotNull(ssKey);
 
-    final List<SampleSource> retrievedSS = ssStorageManager.queryByTitle("George W. Bush");
+    final List<SampleSource> retrievedSS = manager.sampleSource().queryByTitle("George W. Bush");
 
     assertEquals(1, retrievedSS.size());
     assertEquals(pendingSS, retrievedSS.get(0));
@@ -507,7 +507,7 @@ public class IntegrationTest {
   @Test
   public void testSampleSourceFactory_from_Mutated() {
     final SampleSourceType retrievedSST = createDummySampleSourceType();
-    final SampleSource pendingSS = ssStorageManager.create().withTitle("George W. Bush")
+    final SampleSource pendingSS = ssMutationManager.create().withTitle("George W. Bush")
         .withSampleSourceType(retrievedSST)
         .build();
 
@@ -519,11 +519,11 @@ public class IntegrationTest {
     final Key<SampleSourceType> alternativeSSTKey = objectify.put(pendingSST);
     final SampleSourceType alternativeSST = objectify.get(alternativeSSTKey);
 
-    final SampleSource mutatedSS = ssStorageManager.from(pendingSS).withTitle("George Walker Bush")
+    final SampleSource mutatedSS = ssMutationManager.from(pendingSS).withTitle("George Walker Bush")
         .withSampleSourceType(alternativeSST)
         .generate();
 
-    ssStorageManager.commit(mutatedSS);
+    manager.sampleSource().commit(mutatedSS);
 
     final SampleSource retrievedSS = objectify.get(ssKey);
 
@@ -533,7 +533,7 @@ public class IntegrationTest {
   @Test
   public void testSampleSourceFactory_from_Unmutated() {
     final SampleSourceType retrievedSST = createDummySampleSourceType();
-    final SampleSource pendingSS = ssStorageManager.create().withTitle("George W. Bush")
+    final SampleSource pendingSS = ssMutationManager.create().withTitle("George W. Bush")
         .withSampleSourceType(retrievedSST)
         .build();
 
@@ -541,9 +541,9 @@ public class IntegrationTest {
 
     assertNotNull(ssKey);
 
-    final SampleSource unmutatedSS = ssStorageManager.from(pendingSS).generate();
+    final SampleSource unmutatedSS = ssMutationManager.from(pendingSS).generate();
 
-    ssStorageManager.commit(unmutatedSS);
+    manager.sampleSource().commit(unmutatedSS);
 
     final SampleSource retrievedSS = objectify.get(ssKey);
 
@@ -554,9 +554,9 @@ public class IntegrationTest {
   @Test
   public void testSampleSourceFactory_commit() {
     final SampleSourceType retrievedSST = createDummySampleSourceType();
-    final SampleSource pendingSS = ssStorageManager.create().withSampleSourceType(retrievedSST).withTitle("Foo").build();
+    final SampleSource pendingSS = ssMutationManager.create().withSampleSourceType(retrievedSST).withTitle("Foo").build();
 
-    final Key<SampleSource> ssKey = ssStorageManager.commit(pendingSS);
+    final Key<SampleSource> ssKey = manager.sampleSource().commit(pendingSS);
 
     assertNotNull(ssKey);
 
@@ -568,9 +568,9 @@ public class IntegrationTest {
   @Test(expected = NotFoundException.class)
   public void testSampleSourceFactory_delete() {
     final SampleSourceType retrievedSST = createDummySampleSourceType();
-    final SampleSource pendingSS = ssStorageManager.create().withSampleSourceType(retrievedSST).withTitle("Foo").build();
+    final SampleSource pendingSS = ssMutationManager.create().withSampleSourceType(retrievedSST).withTitle("Foo").build();
 
-    final Key<SampleSource> ssKey = ssStorageManager.commit(pendingSS);
+    final Key<SampleSource> ssKey = manager.sampleSource().commit(pendingSS);
 
     assertNotNull(ssKey);
 
@@ -578,7 +578,7 @@ public class IntegrationTest {
 
     assertEquals(pendingSS, retrievedSS);
 
-    ssStorageManager.delete(retrievedSS);
+    manager.sampleSource().delete(retrievedSS);
 
     objectify.get(ssKey);
   }

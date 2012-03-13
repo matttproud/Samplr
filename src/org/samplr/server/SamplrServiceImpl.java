@@ -2,10 +2,10 @@ package org.samplr.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.samplr.client.SamplrService;
 import org.samplr.server.storage.DAO;
+import org.samplr.server.storage.Manager;
 import org.samplr.shared.model.SampleSourceType;
 
 import com.google.inject.Inject;
@@ -22,11 +22,18 @@ public class SamplrServiceImpl extends GuiceRemoteServiceServlet implements Samp
   @Inject
   private DAO dao;
 
+  @Inject
+  Manager sstm;
+
+  @Inject
+  SampleSourceType.MutationManager mm;
+
   @SuppressWarnings("unchecked")
   @Override
   public List<SampleSourceType> getSampleSourceTypes() {
     final Query<SampleSourceType> q = dao.ofy().query(SampleSourceType.class);
     final List<SampleSourceType> l = new ArrayList<SampleSourceType>(q.count());
+
 
     for (final SampleSourceType e : q) {
       l.add(e);
@@ -37,11 +44,12 @@ public class SamplrServiceImpl extends GuiceRemoteServiceServlet implements Samp
 
   @Override
   public boolean createSampleSourceType() {
-    final SampleSourceType a = new SampleSourceType("Politician", "politician");
-    final SampleSourceType b = new SampleSourceType("Crook", "crook");
+    final SampleSourceType a = mm.create().withTitle("foo").build();
+    final SampleSourceType b = mm.create().withTitle("bar").build();
 
-    final Map<Key<SampleSourceType>, SampleSourceType> r = dao.ofy().put(a, b);
+    final Key<SampleSourceType> c = sstm.commit(a);
+    final Key<SampleSourceType> d = sstm.commit(b);
 
-    return r.size() == 2;
+    return (sstm.getByKey(a.getKey()) != null) && (sstm.getByKey(b.getKey()) != null) && (dao.ofy().get(c) != null) && (dao.ofy().get(d) != null);
   }
 }

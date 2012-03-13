@@ -7,18 +7,12 @@ import java.io.Serializable;
 
 import javax.persistence.Id;
 
-import org.samplr.server.storage.DAO;
 import org.samplr.shared.utility.Normalization;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.NotFoundException;
-import com.googlecode.objectify.Query;
 
 /**
  * @author mtp
@@ -79,11 +73,13 @@ public class SampleSourceType implements Serializable {
   }
 
   public static class Builder {
-    private final Normalization normalization = new Normalization();
+    private final Normalization normalization;
 
     private Optional<String> title = Optional.absent();
 
-    Builder() {}
+    Builder(final Normalization normalization) {
+      this.normalization = normalization;
+    }
 
     public Builder withTitle(final String title) {
       this.title = Optional.of(title);
@@ -100,13 +96,14 @@ public class SampleSourceType implements Serializable {
   }
 
   public static class Mutator {
-    private final Normalization normalization = new Normalization();
+    private final Normalization normalization;
     private final SampleSourceType original;
 
     private Optional<String> newTitle = Optional.absent();
 
-    Mutator(final SampleSourceType original) {
+    Mutator(final SampleSourceType original, final Normalization normalization) {
       this.original = original;
+      this.normalization = normalization;
     }
 
     public Mutator withTitle(final String newTitle) {
@@ -125,57 +122,14 @@ public class SampleSourceType implements Serializable {
 
   @Singleton
   public static class MutationManager {
+    private final Normalization normalization = new Normalization();
 
     public Mutator from(final SampleSourceType original) {
-      return new Mutator(original);
+      return new Mutator(original, normalization);
     }
 
     public Builder create() {
-      return new Builder();
-    }
-
-  }
-
-  @Singleton
-  public static class StorageManager {
-    private final DAO dao;
-    private final Normalization normalization = new Normalization();
-
-    @Inject
-    public StorageManager(final DAO dao) {
-      Preconditions.checkNotNull(dao, "dao may not be null.");
-
-      this.dao = dao;
-    }
-
-    public SampleSourceType getByKey(final String key) throws NotFoundException {
-      Preconditions.checkNotNull(key, "key may not be null.");
-      final Key<SampleSourceType> entityKey = new Key<SampleSourceType>(SampleSourceType.class, key);
-
-      return dao.ofy().get(entityKey);
-    }
-
-    public ImmutableList<SampleSourceType> queryByTitle(final String title) {
-      Preconditions.checkNotNull(title, "title may not be null.");
-
-      final String normalizedTitle = normalization.normalize(title);
-
-      final Query<SampleSourceType> query = dao
-          .ofy().query(SampleSourceType.class).filter("normalizedTitle = ", normalizedTitle);
-
-      return ImmutableList.copyOf(query);
-    }
-
-    public Key<SampleSourceType> commit(final SampleSourceType sampleSourceType) {
-      Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
-
-      return dao.ofy().put(sampleSourceType);
-    }
-
-    public void delete(final SampleSourceType sampleSourceType) {
-      Preconditions.checkNotNull(sampleSourceType, "sampleSourceType may not be null.");
-
-      dao.ofy().delete(sampleSourceType);
+      return new Builder(normalization);
     }
   }
 }
