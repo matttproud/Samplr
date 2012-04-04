@@ -8,6 +8,7 @@
 	<classpathentry kind="lib" path="third_party/junit4.10/junit-4.10.jar" sourcepath="third_party/junit4.10/junit-4.10-src.jar"/>
 	<classpathentry kind="lib" path="third_party/junit4.10/junit-dep-4.10.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gin-1.5-post-gwt-2.2.jar"/>
+	<classpathentry kind="lib" path="third_party/mockito-all-1.9.0.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" output="test-classes" path="test"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>

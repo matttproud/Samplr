@@ -12,5 +12,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface SamplrServiceAsync {
   void getSampleSourceTypes(AsyncCallback<List<SampleSourceType>> callback);
 
-  void createSampleSourceType(AsyncCallback<Boolean> callback);
+  void createSampleSourceType(SampleSourceType future,
+      AsyncCallback<SampleSourceType> callback);
 }

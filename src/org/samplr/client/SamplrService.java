@@ -13,6 +13,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("service")
 public interface SamplrService extends RemoteService {
   public List<SampleSourceType> getSampleSourceTypes();
-
-  public boolean createSampleSourceType();
+  public SampleSourceType createSampleSourceType(final SampleSourceType future);
 }

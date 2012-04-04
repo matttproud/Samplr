@@ -2,6 +2,7 @@ package org.samplr.server;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.samplr.client.SamplrService;
 import org.samplr.server.storage.DAO;
@@ -19,37 +20,41 @@ import com.googlecode.objectify.Query;
 @SuppressWarnings("serial")
 @Singleton
 public class SamplrServiceImpl extends GuiceRemoteServiceServlet implements SamplrService {
+  private static final Logger log = Logger.getLogger(SamplrServiceImpl.class.getName());
+
   @Inject
   private DAO dao;
 
   @Inject
-  Manager sstm;
+  Manager persistenceManager;
 
   @Inject
-  SampleSourceType.MutationManager mm;
+  SampleSourceType.MutationManager sampleSourceTypeMutationManager;
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public List<SampleSourceType> getSampleSourceTypes() {
-    final Query<SampleSourceType> q = dao.ofy().query(SampleSourceType.class);
-    final List<SampleSourceType> l = new ArrayList<SampleSourceType>(q.count());
-
-
-    for (final SampleSourceType e : q) {
-      l.add(e);
-    }
-
-    return l;
+  SamplrServiceImpl(final DAO dao, final Manager persistenceManager,
+      final SampleSourceType.MutationManager sampleSourceTypeMutationManager) {
+    this.dao = dao;
+    this.persistenceManager = persistenceManager;
+    this.sampleSourceTypeMutationManager = sampleSourceTypeMutationManager;
   }
 
   @Override
-  public boolean createSampleSourceType() {
-    final SampleSourceType a = mm.create().withTitle("foo").build();
-    final SampleSourceType b = mm.create().withTitle("bar").build();
+  public List<SampleSourceType> getSampleSourceTypes() {
+    final Query<SampleSourceType> query = dao.ofy().query(SampleSourceType.class);
+    final List<SampleSourceType> emission = new ArrayList<SampleSourceType>(query.count());
 
-    final Key<SampleSourceType> c = sstm.commit(a);
-    final Key<SampleSourceType> d = sstm.commit(b);
+    for (final SampleSourceType entry : query) {
+      emission.add(entry);
+    }
 
-    return (sstm.getByKey(a.getKey()) != null) && (sstm.getByKey(b.getKey()) != null) && (dao.ofy().get(c) != null) && (dao.ofy().get(d) != null);
+    return emission;
+  }
+
+  @Override
+  public SampleSourceType createSampleSourceType(final SampleSourceType future) {
+    final SampleSourceType proposed = sampleSourceTypeMutationManager.from(future).generate();
+
+    final Key<SampleSourceType> key = persistenceManager.sampleSourceType().commit(proposed);
+    return persistenceManager.sampleSourceType().getByKey(key.getName());
   }
 }
